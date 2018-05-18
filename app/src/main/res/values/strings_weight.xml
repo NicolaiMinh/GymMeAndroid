@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="weight_data">
+        <item>10 kg</item>
+        <item>11 kg</item>
+        <item>12 kg</item>
+        <item>13 kg</item>
+        <item>14 kg</item>
+        <item>15 kg</item>
+        <item>16 kg</item>
+        <item>17 kg</item>
+        <item>18 kg</item>
+        <item>19 kg</item>
+        <item>20 kg</item>
+        <item>21 kg</item>
+        <item>22 kg</item>
+        <item>23 kg</item>
+        <item>24 kg</item>
+        <item>25 kg</item>
+        <item>26 kg</item>
+        <item>27 kg</item>
+        <item>28 kg</item>
+        <item>29 kg</item>
+        <item>30 kg</item>
+        <item>31 kg</item>
+        <item>32 kg</item>
+        <item>33 kg</item>
+        <item>34 kg</item>
+        <item>35 kg</item>
+        <item>36 kg</item>
+        <item>37 kg</item>
+        <item>38 kg</item>
+        <item>39 kg</item>
+        <item>40 kg</item>
+        <item>41 kg</item>
+        <item>42 kg</item>
+        <item>43 kg</item>
+        <item>44 kg</item>
+        <item>45 kg</item>
+        <item>46 kg</item>
+    </string-array>
+</resources>

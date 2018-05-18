@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "495410230491",
+    "firebase_url": "https://gymme-f9bc3.firebaseio.com",
+    "project_id": "gymme-f9bc3",
+    "storage_bucket": "gymme-f9bc3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495410230491:android:0db8fcd6a33be5f3",
+        "android_client_info": {
+          "package_name": "com.android.sgvn.gymme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495410230491-8udbhtif16h7g777kjrfiihfga3putq3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.sgvn.gymme",
+            "certificate_hash": "89e2eb763c96d4a8f97ef601c595c552bf2ac6b2"
+          }
+        },
+        {
+          "client_id": "495410230491-tc4bmd35m40a9jlmqc4quei5tm2if2g8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4tvn5f-ERkYA9vrRR4yLqEUPQKCTxSl8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "495410230491-tc4bmd35m40a9jlmqc4quei5tm2if2g8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

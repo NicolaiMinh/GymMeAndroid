@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">GymMe</string>
+    <string name="string_skip">Skip</string>
+    <string name="string_next">Next</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label_go_to_settings">Go to setting the conection</string>
+    <string name="tab_exercise">Exercise</string>
+    <string name="tab_workout">Workouts</string>
+    <string name="tab_progress">Progress</string>
+    <string name="tab_meal">Meal Plans</string>
+    <string name="tab_more">More</string>
+    <string name="string_setting">Settings</string>
+    <string name="string_account">Account</string>
+    <string name="string_helps">Helps</string>
+    <string name="string_profile">Profile</string>
+
+    <string name="ask_permission_camera_storage">You must be allowed to access your Camera and Storage</string>
+    <string name="ask_permission_photo_access">You must be allowed to access your Photos</string>
+    <string name="permission_access">Permission Access</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="permission_denied">Permission denied. Please adjust permission on Apps Settings</string>
+    <string name="custom_title">Edit Profile Name</string>
+    <string name="save">Save</string>
+    <string name="string_meal_plans">Meal Plans</string>
+</resources>
