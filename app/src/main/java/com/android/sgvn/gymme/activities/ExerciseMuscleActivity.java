@@ -1,18 +1,21 @@
 package com.android.sgvn.gymme.activities;
 
-import android.media.Image;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.sgvn.gymme.R;
 import com.android.sgvn.gymme.adapter.ExerciseMuscleRecyclerAdapter;
 import com.android.sgvn.gymme.common.Common;
 import com.android.sgvn.gymme.model.ExerciseMuscleDetail;
-import com.android.sgvn.gymme.model.Meal;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +34,7 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
 
     @BindView(R.id.list_muscle_exercise)
     RecyclerView listMuscleExercise;
+
     String idExercise, nameExercise;
 
     private ExerciseMuscleRecyclerAdapter mAdapter;
@@ -39,6 +43,9 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
     //firebase
     FirebaseDatabase database;
     DatabaseReference reference;
+
+
+    private int positionheart = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,25 +63,25 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
 
         initView();
 
+
     }
 
     private void initView() {
         exerciseMuscleDetailList = new ArrayList<>();
-        mAdapter = new ExerciseMuscleRecyclerAdapter(this,exerciseMuscleDetailList, this);
+        exerciseMuscleDetailList.clear();
+        mAdapter = new ExerciseMuscleRecyclerAdapter(this, exerciseMuscleDetailList, this);
         listMuscleExercise.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);//hien thi 2 cot
         listMuscleExercise.setLayoutManager(gridLayoutManager);
         listMuscleExercise.setAdapter(mAdapter);
+        if (nameExercise != null) {
+            getDataFromFirebase();
+        }
 
-
-        //test dit hub
-
-
-        getDataFromFirebase();
     }
 
     private void getDataFromFirebase() {
-        if(nameExercise.equals("Chest")){
+        if (nameExercise.equals("Chest")) {
             reference.child(Common.FIREBASE_MUSCLE_EXERCISE_CHEST_TABLE).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -91,7 +98,7 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
                     Log.d(TAG, "Database error: " + databaseError.getMessage());
                 }
             });
-        }else if(nameExercise.equals("Leg")){
+        } else if (nameExercise.equals("Leg")) {
             reference.child(Common.FIREBASE_MUSCLE_EXERCISE_LEG_TABLE).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -108,7 +115,7 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
                     Log.d(TAG, "Database error: " + databaseError.getMessage());
                 }
             });
-        }else if(nameExercise.equals("Shoulder")){
+        } else if (nameExercise.equals("Shoulder")) {
             reference.child(Common.FIREBASE_MUSCLE_EXERCISE_SHOULDER_TABLE).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -132,11 +139,9 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
 
     //implements ExerciseMuscleRecyclerAdapter.ExerciseMuscleRecyclerHolder.ClickListener
     @Override
-    public void onCLickItem(int position) {
-
-
+    public void onCLickItem(final int position) {
         Log.d(TAG, "position " + mAdapter.getExerciseMuscleDetail().get(position));
-
-        Toast.makeText(this, "position "+mAdapter.getExerciseMuscleDetail().get(position) , Toast.LENGTH_SHORT).show();
     }
+
+
 }

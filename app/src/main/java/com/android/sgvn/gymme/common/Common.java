@@ -11,5 +11,10 @@ public class Common {
     public static final String FIREBASE_MUSCLE_EXERCISE_SHOULDER_TABLE = "Shoulder";
     public static final String FIREBASE_MUSCLE_EXERCISE_LEG_TABLE = "Leg";
     public static final String FIREBASE_MUSCLE_EXERCISE_ARM_TABLE = "Arm";
+
+
+
     public static final String TITLE_MEAL = "TITLE_MEAL";
+
+    public static final String EXERCISE_POSITION_FAVORITE = "EXERCISE_POSITION_FAVORITE";
 }

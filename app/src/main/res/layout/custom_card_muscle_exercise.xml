@@ -60,12 +60,12 @@
                     android:textStyle="bold" />
 
                 <ImageView
+                    android:id="@+id/favoriteCardMuscle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
                     android:layout_gravity="center"
-                    android:id="@+id/favoriteCardMuscle"
-                    android:src="@drawable/ic_star_border_black_24dp" />
+                    android:layout_weight="0.2"
+                    android:src="@drawable/ic_star_black_item" />
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

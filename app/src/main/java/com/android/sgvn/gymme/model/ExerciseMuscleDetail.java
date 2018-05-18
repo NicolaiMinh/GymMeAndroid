@@ -26,16 +26,19 @@ public class ExerciseMuscleDetail {
 
     private int color;
 
+    @SerializedName("isFavourite")
+    @Expose
     private boolean isFavourite;
 
 
     public ExerciseMuscleDetail() {
     }
 
-    public ExerciseMuscleDetail(String exerciseDetail, String exerciseName, String imageURL, String videoURL) {
+    public ExerciseMuscleDetail(String exerciseDetail, String exerciseName, String imageURL, boolean isFavourite, String videoURL) {
         this.exerciseDetail = exerciseDetail;
         this.exerciseName = exerciseName;
         this.imageURL = imageURL;
+        this.isFavourite = isFavourite;
         this.videoURL = videoURL;
     }
 
