@@ -67,6 +67,9 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
         listMuscleExercise.setAdapter(mAdapter);
 
 
+        //test dit hub
+
+
         getDataFromFirebase();
     }
 
