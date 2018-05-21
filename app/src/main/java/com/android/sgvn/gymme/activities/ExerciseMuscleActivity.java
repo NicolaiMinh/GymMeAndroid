@@ -1,6 +1,7 @@
 package com.android.sgvn.gymme.activities;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,13 +17,17 @@ import com.android.sgvn.gymme.R;
 import com.android.sgvn.gymme.adapter.ExerciseMuscleRecyclerAdapter;
 import com.android.sgvn.gymme.common.Common;
 import com.android.sgvn.gymme.model.ExerciseMuscleDetail;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,13 +44,12 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
 
     private ExerciseMuscleRecyclerAdapter mAdapter;
     private List<ExerciseMuscleDetail> exerciseMuscleDetailList;
+    private boolean isSetFavorite;
+    private ExerciseMuscleDetail currentPosition;
 
     //firebase
     FirebaseDatabase database;
     DatabaseReference reference;
-
-
-    private int positionheart = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +91,7 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         ExerciseMuscleDetail muscleDetail = snapshot.getValue(ExerciseMuscleDetail.class);
-
+                        Log.d(TAG, String.valueOf(muscleDetail.isFavorite()));
                         exerciseMuscleDetailList.add(muscleDetail);
                     }
                     mAdapter.notifyDataSetChanged();
@@ -139,8 +143,44 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
 
     //implements ExerciseMuscleRecyclerAdapter.ExerciseMuscleRecyclerHolder.ClickListener
     @Override
-    public void onCLickItem(final int position) {
+    public void onClickItem(final int position) {
         Log.d(TAG, "position " + mAdapter.getExerciseMuscleDetail().get(position));
+    }
+
+    //click item favorite
+    @Override
+    public void onClickFavoriteItem(int position) {
+        if (mAdapter.getExerciseMuscleDetail().get(position).isFavorite()) {
+            mAdapter.getExerciseMuscleDetail().get(position).setFavorite(false);
+            isSetFavorite = false;
+        } else {
+            mAdapter.getExerciseMuscleDetail().get(position).setFavorite(true);
+            isSetFavorite = true;
+        }
+        currentPosition = mAdapter.getExerciseMuscleDetail().get(position);
+        uploadSetFavorite(isSetFavorite);
+        mAdapter.notifyDataSetChanged();
+        Log.d(TAG, "position favorite click " + mAdapter.getExerciseMuscleDetail().get(position));
+    }
+
+    private void uploadSetFavorite(final boolean isSetFavorite) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("favorite", isSetFavorite);
+        // get current position by ID and update
+        if (!nameExercise.isEmpty()) {
+            if (nameExercise.equals("Chest")) {
+                reference.child(Common.FIREBASE_MUSCLE_EXERCISE_CHEST_TABLE).child(String.valueOf(currentPosition.getId())).updateChildren(params);
+                mAdapter.notifyDataSetChanged();
+            } else if (nameExercise.equals("Leg")) {
+                reference.child(Common.FIREBASE_MUSCLE_EXERCISE_LEG_TABLE).child(String.valueOf(currentPosition.getId())).updateChildren(params);
+                mAdapter.notifyDataSetChanged();
+            } else if (nameExercise.equals("Shoulder")) {
+                reference.child(Common.FIREBASE_MUSCLE_EXERCISE_SHOULDER_TABLE).child(String.valueOf(currentPosition.getId())).updateChildren(params);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+
+
     }
 
 

@@ -3,6 +3,8 @@ package com.android.sgvn.gymme.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by sgvn144 on 2018/05/11.
  */
@@ -24,22 +26,25 @@ public class ExerciseMuscleDetail {
     @Expose
     private String videoURL;
 
-    private int color;
-
-    @SerializedName("isFavourite")
+    @SerializedName("favorite")
     @Expose
-    private boolean isFavourite;
+    private boolean favorite;
+
+    @SerializedName("id")
+    @Expose
+    private int id;
 
 
     public ExerciseMuscleDetail() {
     }
 
-    public ExerciseMuscleDetail(String exerciseDetail, String exerciseName, String imageURL, boolean isFavourite, String videoURL) {
+    public ExerciseMuscleDetail(String exerciseDetail, String exerciseName, String imageURL, String videoURL, boolean favorite, int id) {
         this.exerciseDetail = exerciseDetail;
         this.exerciseName = exerciseName;
         this.imageURL = imageURL;
-        this.isFavourite = isFavourite;
         this.videoURL = videoURL;
+        this.favorite = favorite;
+        this.id = id;
     }
 
     public String getExerciseDetail() {
@@ -74,19 +79,19 @@ public class ExerciseMuscleDetail {
         this.videoURL = videoURL;
     }
 
-    public int getColor() {
-        return color;
+    public boolean isFavorite() {
+        return favorite;
     }
 
-    public void setColor(int color) {
-        this.color = color;
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
-    public boolean isFavourite() {
-        return isFavourite;
+    public int getId() {
+        return id;
     }
 
-    public void setFavourite(boolean favourite) {
-        isFavourite = favourite;
+    public void setId(int id) {
+        this.id = id;
     }
 }

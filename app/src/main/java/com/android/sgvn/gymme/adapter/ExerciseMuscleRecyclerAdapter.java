@@ -29,12 +29,6 @@ public class ExerciseMuscleRecyclerAdapter extends RecyclerView.Adapter<Exercise
     private List<ExerciseMuscleDetail> exerciseMuscleDetailList;
     private ExerciseMuscleRecyclerHolder.ClickListener mClickListener;
 
-    //firebase
-    FirebaseDatabase database;
-    DatabaseReference reference;
-
-    boolean isSetFavorite;
-
     public ExerciseMuscleRecyclerAdapter(Context context, List<ExerciseMuscleDetail> exerciseMuscleDetailList, ExerciseMuscleRecyclerHolder.ClickListener mClickListener) {
         this.context = context;
         this.exerciseMuscleDetailList = exerciseMuscleDetailList;
@@ -45,7 +39,6 @@ public class ExerciseMuscleRecyclerAdapter extends RecyclerView.Adapter<Exercise
     public ExerciseMuscleRecyclerHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.custom_card_muscle_exercise, parent, false);
-
 
         return new ExerciseMuscleRecyclerHolder(view, mClickListener);
     }
@@ -61,37 +54,11 @@ public class ExerciseMuscleRecyclerAdapter extends RecyclerView.Adapter<Exercise
         //set exercise name
         holder.titleExerciseName.setText(item.getExerciseName());
 
-
-        //set favorite icon
-//        final Intent intent = new Intent(context, ExerciseMuscleActivity.class);
-        holder.favoriteCardMuscle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!item.isFavourite()) {
-                    holder.favoriteCardMuscle.setImageResource(R.drawable.ic_star_black_favorite);
-                    item.setFavourite(true);
-                    isSetFavorite = true;
-//                    intent.putExtra(Common.EXERCISE_POSITION_FAVORITE, holder.getAdapterPosition());
-
-                } else {
-                    holder.favoriteCardMuscle.setImageResource(R.drawable.ic_star_black_item);
-                    item.setFavourite(false);
-                    isSetFavorite = false;
-//                    intent.putExtra(Common.EXERCISE_POSITION_FAVORITE,holder.getAdapterPosition());
-                }
-                notifyDataSetChanged();
-//                context.startActivity(intent);
-                updateFavoriteToDatabase();
-            }
-        });
-
-
-    }
-
-    private void updateFavoriteToDatabase() {
-        database = FirebaseDatabase.getInstance();
-        reference = database.getReference(Common.FIREBASE_MUSCLE_EXERCISE_TABLE);
-        reference.child(Common.FIREBASE_MUSCLE_EXERCISE_CHEST_TABLE).child("1").child("isFavourite").setValue(isSetFavorite);
+        if (item.isFavorite()) {
+            holder.favoriteCardMuscle.setImageResource(R.drawable.ic_star_black_favorite);
+        } else {
+            holder.favoriteCardMuscle.setImageResource(R.drawable.ic_star_black_item);
+        }
     }
 
     @Override
@@ -105,7 +72,7 @@ public class ExerciseMuscleRecyclerAdapter extends RecyclerView.Adapter<Exercise
 
     public static class ExerciseMuscleRecyclerHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ClickListener mListener;
-        private ImageView mImageView, favoriteCardMuscle;
+        public ImageView mImageView, favoriteCardMuscle;
         private TextView titleExerciseName;
 
 
@@ -118,19 +85,27 @@ public class ExerciseMuscleRecyclerAdapter extends RecyclerView.Adapter<Exercise
             mImageView = itemView.findViewById(R.id.image_card_exercise);
             favoriteCardMuscle = itemView.findViewById(R.id.favoriteCardMuscle);
             titleExerciseName = itemView.findViewById(R.id.titleExerciseName);
+
+            favoriteCardMuscle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClickFavoriteItem(getAdapterPosition());
+                }
+            });
         }
 
         @Override
         public void onClick(View v) {
             if (mListener != null) {
-                mListener.onCLickItem(getAdapterPosition());
+                mListener.onClickItem(getAdapterPosition());
             }
         }
 
-
         //click on each item
         public interface ClickListener {
-            void onCLickItem(int position);
+            void onClickItem(int position);
+
+            void onClickFavoriteItem(int position);
         }
 
     }

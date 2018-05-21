@@ -17,4 +17,5 @@ public class Common {
     public static final String TITLE_MEAL = "TITLE_MEAL";
 
     public static final String EXERCISE_POSITION_FAVORITE = "EXERCISE_POSITION_FAVORITE";
+    public static final String EXERCISE_SET_FAVORITE_PROPERTY = "favorite";
 }
