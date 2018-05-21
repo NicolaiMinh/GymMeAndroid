@@ -1,29 +1,25 @@
 package com.android.sgvn.gymme.activities;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.android.sgvn.gymme.R;
 import com.android.sgvn.gymme.adapter.ExerciseMuscleRecyclerAdapter;
 import com.android.sgvn.gymme.common.Common;
+import com.android.sgvn.gymme.fragments.tabMainFragments.FavoriteEachExerciseFragment;
 import com.android.sgvn.gymme.model.ExerciseMuscleDetail;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -32,6 +28,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class ExerciseMuscleActivity extends AppCompatActivity implements ExerciseMuscleRecyclerAdapter.ExerciseMuscleRecyclerHolder.ClickListener {
@@ -39,13 +36,16 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
 
     @BindView(R.id.list_muscle_exercise)
     RecyclerView listMuscleExercise;
-
-    String idExercise, nameExercise;
+    @BindView(R.id.favoriteEachExercise)
+    ImageView favoriteEachExercise;
+    @BindView(R.id.favoriteEachExerciseFragment)
+    FrameLayout favoriteEachExerciseFragment;
 
     private ExerciseMuscleRecyclerAdapter mAdapter;
     private List<ExerciseMuscleDetail> exerciseMuscleDetailList;
     private boolean isSetFavorite;
     private ExerciseMuscleDetail currentPosition;
+    String idExercise, nameExercise;
 
     //firebase
     FirebaseDatabase database;
@@ -61,12 +61,10 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
         nameExercise = getIntent().getStringExtra("nameExercise");
         Log.d(TAG, idExercise + " " + nameExercise);
 
-
         database = FirebaseDatabase.getInstance();
         reference = database.getReference(Common.FIREBASE_MUSCLE_EXERCISE_TABLE);
 
         initView();
-
 
     }
 
@@ -165,7 +163,7 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
 
     private void uploadSetFavorite(final boolean isSetFavorite) {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("favorite", isSetFavorite);
+        params.put(Common.EXERCISE_SET_FAVORITE_PROPERTY, isSetFavorite);
         // get current position by ID and update
         if (!nameExercise.isEmpty()) {
             if (nameExercise.equals("Chest")) {
@@ -179,9 +177,21 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
                 mAdapter.notifyDataSetChanged();
             }
         }
-
-
     }
 
+
+    @OnClick({R.id.favoriteEachExercise})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.favoriteEachExercise:
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                FavoriteEachExerciseFragment favoriteEachExerciseFragment = new FavoriteEachExerciseFragment();
+                fragmentTransaction.add(R.id.fragment, favoriteEachExerciseFragment);
+                fragmentTransaction.commit();
+                break;
+
+        }
+    }
 
 }
