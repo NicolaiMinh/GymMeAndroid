@@ -1,10 +1,16 @@
 package com.android.sgvn.gymme.activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,6 +47,8 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
     @BindView(R.id.message_favorite)
     TextView messageFavorite;
 
+    private SearchView searchView;
+
     private ExerciseMuscleRecyclerAdapter mAdapter;
     private ExerciseMuscleFavoriteRecyclerAdapter mFavoriteAdapter;
 
@@ -69,6 +77,9 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
         reference = database.getReference(Common.FIREBASE_MUSCLE_EXERCISE_TABLE);
 
         initView();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
 
     }
 
@@ -190,7 +201,6 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
                     initView();
                 }
                 break;
-
         }
     }
 
@@ -331,5 +341,105 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
             mFavoriteAdapter.notifyDataSetChanged();
             Log.d(TAG, "position favorite list favorite item click " + mFavoriteAdapter.getExerciseMuscleDetail().get(position));
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.action_search)
+                .getActionView();
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        // listening to search query text change
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // filter recycler view when query submitted
+                if (isChooseFavorite) {
+                    mFavoriteAdapter.getFilter().filter(query);
+                    if (mFavoriteAdapter.getExerciseMuscleDetail().size() == 0) {
+                        messageFavorite.setText("No results for " + query + " in XXX category. \n Note: the search covers bodyparts, equipment, muscle exercise.");
+                        messageFavorite.setVisibility(View.VISIBLE);
+                    } else {
+                        messageFavorite.setText("");
+                        messageFavorite.setVisibility(View.GONE);
+                    }
+                    if(query.isEmpty()){
+
+                    }
+                } else {
+                    mAdapter.getFilter().filter(query);
+                    if (mAdapter.getExerciseMuscleDetail().size() == 0) {
+                        messageFavorite.setText("No results for " + query + " in XXX category. \n Note: the search covers bodyparts, equipment, muscle exercise.");
+                        messageFavorite.setVisibility(View.VISIBLE);
+                    } else {
+                        messageFavorite.setText("");
+                        messageFavorite.setVisibility(View.GONE);
+                    }
+                    if(query.isEmpty()){
+
+                    }
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // filter recycler view when text is changed
+                if (isChooseFavorite) {
+                    mFavoriteAdapter.getFilter().filter(query);
+                    if (mFavoriteAdapter.getExerciseMuscleDetail().size() == 0) {
+                        messageFavorite.setText("No results for " + query + " in XXX category. \n Note: the search covers bodyparts, equipment, muscle exercise.");
+                        messageFavorite.setVisibility(View.VISIBLE);
+                    } else {
+                        messageFavorite.setText("");
+                        messageFavorite.setVisibility(View.GONE);
+                    }
+                } else {
+                    mAdapter.getFilter().filter(query);
+                    if (mAdapter.getExerciseMuscleDetail().size() == 0) {
+//                        messageFavorite.setText("sdasdasdasd");
+                        messageFavorite.setText("No results for " + query + " in XXX category. \n Note: the search covers bodyparts, equipment, muscle exercise.");
+                        messageFavorite.setVisibility(View.VISIBLE);
+                    } else {
+                        messageFavorite.setText("");
+//                        messageFavorite.setVisibility(View.GONE);
+                    }
+                }
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_search) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // close search view on back button pressed
+        if (!searchView.isIconified()) {
+            searchView.setIconified(true);
+            return;
+        }
+        super.onBackPressed();
     }
 }

@@ -36,7 +36,15 @@
             android:value="63c241de61bfc006809b4389a914004d0f7a2d6b" />
 
         <activity android:name=".activities.MealDetailActivity" />
-        <activity android:name=".activities.ExerciseMuscleActivity"></activity>
+        <activity android:name=".activities.ExerciseMuscleActivity">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

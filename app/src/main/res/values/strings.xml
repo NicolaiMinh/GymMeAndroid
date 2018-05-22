@@ -25,4 +25,7 @@
     <string name="custom_title">Edit Profile Name</string>
     <string name="save">Save</string>
     <string name="string_meal_plans">Meal Plans</string>
+    <string name="search_hint">search_hint</string>
+    <string name="action_search">action_search</string>
+
 </resources>

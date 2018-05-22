@@ -6,8 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.sgvn.gymme.R;
 import com.android.sgvn.gymme.activities.ExerciseMuscleActivity;
@@ -17,21 +20,24 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by sgvn144 on 2018/05/11.
  */
 
-public class ExerciseMuscleRecyclerAdapter extends RecyclerView.Adapter<ExerciseMuscleRecyclerAdapter.ExerciseMuscleRecyclerHolder> {
+public class ExerciseMuscleRecyclerAdapter extends RecyclerView.Adapter<ExerciseMuscleRecyclerAdapter.ExerciseMuscleRecyclerHolder> implements Filterable {
 
     private Context context;
     private List<ExerciseMuscleDetail> exerciseMuscleDetailList;
+    private List<ExerciseMuscleDetail> exerciseMuscleDetailListFiltered;//list for filter
     private ExerciseMuscleRecyclerHolder.ClickListener mClickListener;
 
     public ExerciseMuscleRecyclerAdapter(Context context, List<ExerciseMuscleDetail> exerciseMuscleDetailList, ExerciseMuscleRecyclerHolder.ClickListener mClickListener) {
         this.context = context;
         this.exerciseMuscleDetailList = exerciseMuscleDetailList;
+        this.exerciseMuscleDetailListFiltered = exerciseMuscleDetailList;
         this.mClickListener = mClickListener;
     }
 
@@ -45,7 +51,7 @@ public class ExerciseMuscleRecyclerAdapter extends RecyclerView.Adapter<Exercise
 
     @Override
     public void onBindViewHolder(final ExerciseMuscleRecyclerHolder holder, int position) {
-        final ExerciseMuscleDetail item = exerciseMuscleDetailList.get(position);
+        final ExerciseMuscleDetail item = exerciseMuscleDetailListFiltered.get(position);
 
         //set Image
         Glide.with(context)
@@ -63,11 +69,52 @@ public class ExerciseMuscleRecyclerAdapter extends RecyclerView.Adapter<Exercise
 
     @Override
     public int getItemCount() {
-        return exerciseMuscleDetailList == null ? 0 : exerciseMuscleDetailList.size();
+        return exerciseMuscleDetailListFiltered == null ? 0 : exerciseMuscleDetailListFiltered.size();
     }
 
     public List<ExerciseMuscleDetail> getExerciseMuscleDetail() {
-        return exerciseMuscleDetailList;
+        return exerciseMuscleDetailListFiltered;
+    }
+
+    //filter in recycler view
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    exerciseMuscleDetailListFiltered = exerciseMuscleDetailList;
+                } else {
+                    List<ExerciseMuscleDetail> filteredList = new ArrayList<>();
+                    for (ExerciseMuscleDetail row : exerciseMuscleDetailList) {
+
+                        // name match condition. this might differ depending on your requirement
+                        // here we are looking for name or phone number match
+                        if (row.getExerciseName().toLowerCase().contains(charString.toLowerCase())) {
+                            filteredList.add(row);
+                        }
+                    }
+                    exerciseMuscleDetailListFiltered = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = exerciseMuscleDetailListFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                exerciseMuscleDetailListFiltered = (ArrayList<ExerciseMuscleDetail>) filterResults.values;
+                notifyDataSetChanged();
+//                if (exerciseMuscleDetailListFiltered.size() == 0) {
+////                    Toast.makeText(context, "Ko có giá tri tim kiem", Toast.LENGTH_SHORT).show();
+//                } else {
+//
+//
+//                }
+            }
+        };
     }
 
     public static class ExerciseMuscleRecyclerHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
