@@ -1,20 +1,18 @@
 package com.android.sgvn.gymme.activities;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.sgvn.gymme.R;
+import com.android.sgvn.gymme.adapter.ExerciseMuscleFavoriteRecyclerAdapter;
 import com.android.sgvn.gymme.adapter.ExerciseMuscleRecyclerAdapter;
 import com.android.sgvn.gymme.common.Common;
-import com.android.sgvn.gymme.fragments.tabMainFragments.FavoriteEachExerciseFragment;
 import com.android.sgvn.gymme.model.ExerciseMuscleDetail;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,19 +29,25 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class ExerciseMuscleActivity extends AppCompatActivity implements ExerciseMuscleRecyclerAdapter.ExerciseMuscleRecyclerHolder.ClickListener {
+public class ExerciseMuscleActivity extends AppCompatActivity implements ExerciseMuscleRecyclerAdapter.ExerciseMuscleRecyclerHolder.ClickListener,
+        ExerciseMuscleFavoriteRecyclerAdapter.ExerciseMuscleFavoriteRecyclerHolder.ClickListener {
+
     private static final String TAG = ExerciseMuscleActivity.class.getSimpleName();
 
     @BindView(R.id.list_muscle_exercise)
     RecyclerView listMuscleExercise;
     @BindView(R.id.favoriteEachExercise)
     ImageView favoriteEachExercise;
-    @BindView(R.id.favoriteEachExerciseFragment)
-    FrameLayout favoriteEachExerciseFragment;
+    @BindView(R.id.message_favorite)
+    TextView messageFavorite;
 
     private ExerciseMuscleRecyclerAdapter mAdapter;
+    private ExerciseMuscleFavoriteRecyclerAdapter mFavoriteAdapter;
+
     private List<ExerciseMuscleDetail> exerciseMuscleDetailList;
     private boolean isSetFavorite;
+    private boolean isFetchData = false;
+    private boolean isChooseFavorite = false;
     private ExerciseMuscleDetail currentPosition;
     String idExercise, nameExercise;
 
@@ -69,6 +73,8 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
     }
 
     private void initView() {
+        isChooseFavorite = false;
+        favoriteEachExercise.setImageResource(R.drawable.ic_star_border_yellow_24dp);
         exerciseMuscleDetailList = new ArrayList<>();
         exerciseMuscleDetailList.clear();
         mAdapter = new ExerciseMuscleRecyclerAdapter(this, exerciseMuscleDetailList, this);
@@ -79,7 +85,6 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
         if (nameExercise != null) {
             getDataFromFirebase();
         }
-
     }
 
     private void getDataFromFirebase() {
@@ -89,7 +94,6 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         ExerciseMuscleDetail muscleDetail = snapshot.getValue(ExerciseMuscleDetail.class);
-                        Log.d(TAG, String.valueOf(muscleDetail.isFavorite()));
                         exerciseMuscleDetailList.add(muscleDetail);
                     }
                     mAdapter.notifyDataSetChanged();
@@ -106,7 +110,6 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         ExerciseMuscleDetail muscleDetail = snapshot.getValue(ExerciseMuscleDetail.class);
-
                         exerciseMuscleDetailList.add(muscleDetail);
                     }
                     mAdapter.notifyDataSetChanged();
@@ -123,7 +126,6 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         ExerciseMuscleDetail muscleDetail = snapshot.getValue(ExerciseMuscleDetail.class);
-
                         exerciseMuscleDetailList.add(muscleDetail);
                     }
                     mAdapter.notifyDataSetChanged();
@@ -137,7 +139,6 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
         }
 
     }
-
 
     //implements ExerciseMuscleRecyclerAdapter.ExerciseMuscleRecyclerHolder.ClickListener
     @Override
@@ -179,19 +180,156 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
         }
     }
 
-
     @OnClick({R.id.favoriteEachExercise})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.favoriteEachExercise:
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                FavoriteEachExerciseFragment favoriteEachExerciseFragment = new FavoriteEachExerciseFragment();
-                fragmentTransaction.add(R.id.fragment, favoriteEachExerciseFragment);
-                fragmentTransaction.commit();
+                if (!isChooseFavorite) {//false -> true
+                    fetchExerciseFavorite();
+                } else {
+                    initView();
+                }
                 break;
 
         }
     }
 
+    private void fetchExerciseFavorite() {
+        isChooseFavorite = true;
+        favoriteEachExercise.setImageResource(R.drawable.ic_star_yellow_24dp);
+        exerciseMuscleDetailList = new ArrayList<>();
+        exerciseMuscleDetailList.clear();
+        mFavoriteAdapter = new ExerciseMuscleFavoriteRecyclerAdapter(this, exerciseMuscleDetailList, this);
+        listMuscleExercise.setHasFixedSize(true);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);//hien thi 2 cot
+        listMuscleExercise.setLayoutManager(gridLayoutManager);
+        listMuscleExercise.setAdapter(mFavoriteAdapter);
+
+        //when isFetchData == true
+        if (exerciseMuscleDetailList.size() == 0 && isFetchData) {
+            messageFavorite.setVisibility(View.VISIBLE);
+        }
+
+        //before fetch data
+        if (nameExercise != null) {
+            messageFavorite.setVisibility(View.GONE);
+            getDataFavoriteFromFirebase();
+        }
+
+    }
+
+    private void getDataFavoriteFromFirebase() {
+        if (nameExercise.equals("Chest")) {
+            reference.child(Common.FIREBASE_MUSCLE_EXERCISE_CHEST_TABLE).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        ExerciseMuscleDetail muscleDetail = snapshot.getValue(ExerciseMuscleDetail.class);
+                        if (muscleDetail.isFavorite()) {//favorite is true to add to list
+                            exerciseMuscleDetailList.add(muscleDetail);
+                            isFetchData = true;
+                        }
+                    }
+                    //after fetch data
+                    if (exerciseMuscleDetailList.size() == 0) {
+                        messageFavorite.setVisibility(View.VISIBLE);
+                    }
+                    mFavoriteAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG, "Database error: " + databaseError.getMessage());
+                }
+            });
+        } else if (nameExercise.equals("Leg")) {
+            reference.child(Common.FIREBASE_MUSCLE_EXERCISE_LEG_TABLE).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        ExerciseMuscleDetail muscleDetail = snapshot.getValue(ExerciseMuscleDetail.class);
+                        if (muscleDetail.isFavorite()) {//favorite is true to add to list
+                            exerciseMuscleDetailList.add(muscleDetail);
+                            isFetchData = true;
+                        }
+                    }
+                    //after fetch data
+                    if (exerciseMuscleDetailList.size() == 0) {
+                        messageFavorite.setVisibility(View.VISIBLE);
+                    }
+                    mFavoriteAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG, "Database error: " + databaseError.getMessage());
+                }
+            });
+        } else if (nameExercise.equals("Shoulder")) {
+            reference.child(Common.FIREBASE_MUSCLE_EXERCISE_SHOULDER_TABLE).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        ExerciseMuscleDetail muscleDetail = snapshot.getValue(ExerciseMuscleDetail.class);
+                        if (muscleDetail.isFavorite()) {//favorite is true to add to list
+                            exerciseMuscleDetailList.add(muscleDetail);
+                            isFetchData = true;
+                        }
+                    }
+                    //after fetch data
+                    if (exerciseMuscleDetailList.size() == 0) {
+                        messageFavorite.setVisibility(View.VISIBLE);
+                    }
+                    mFavoriteAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG, "Database error: " + databaseError.getMessage());
+                }
+            });
+        }
+    }
+
+    //click card item at list favorite
+    @Override
+    public void onFavoriteClickItem(int position) {
+        Log.d(TAG, "position favorite item click  " + mFavoriteAdapter.getExerciseMuscleDetail().get(position));
+    }
+
+    //click favorite in card at list favorite
+    @Override
+    public void onFavoriteClickFavoriteItem(int position) {
+        if (mFavoriteAdapter.getExerciseMuscleDetail().get(position).isFavorite()) {//favorite is true
+            mFavoriteAdapter.getExerciseMuscleDetail().get(position).setFavorite(false);
+            isSetFavorite = false;
+
+            currentPosition = mFavoriteAdapter.getExerciseMuscleDetail().get(position);
+            uploadSetFavorite(isSetFavorite);
+            //when click dislike  exerciseMuscleDetailList remove item with position in list
+            exerciseMuscleDetailList.remove(position);
+            //recycler remove item in list
+            listMuscleExercise.removeViewAt(position);
+            //adapter is notifyItemRemoved
+            mFavoriteAdapter.notifyItemRemoved(position);
+            //adapter is update range of list
+            mFavoriteAdapter.notifyItemRangeChanged(position, exerciseMuscleDetailList.size());
+
+            mFavoriteAdapter.notifyDataSetChanged();
+
+            //when unlike in list favorite
+            if (exerciseMuscleDetailList.size() == 0 && isFetchData) {
+                messageFavorite.setVisibility(View.VISIBLE);
+            }
+
+        } else {//favorite is false
+            mFavoriteAdapter.getExerciseMuscleDetail().get(position).setFavorite(true);
+            isSetFavorite = true;
+            //get currentPosition to update favorite property
+            currentPosition = mFavoriteAdapter.getExerciseMuscleDetail().get(position);
+            uploadSetFavorite(isSetFavorite);
+            mFavoriteAdapter.notifyDataSetChanged();
+            Log.d(TAG, "position favorite list favorite item click " + mFavoriteAdapter.getExerciseMuscleDetail().get(position));
+        }
+    }
 }
