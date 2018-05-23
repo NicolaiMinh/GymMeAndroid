@@ -1,5 +1,6 @@
 package com.android.sgvn.gymme.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +35,8 @@ public class ExerciseMuscleRecyclerAdapter extends RecyclerView.Adapter<Exercise
     private List<ExerciseMuscleDetail> exerciseMuscleDetailListFiltered;//list for filter
     private ExerciseMuscleRecyclerHolder.ClickListener mClickListener;
 
+
+
     public ExerciseMuscleRecyclerAdapter(Context context, List<ExerciseMuscleDetail> exerciseMuscleDetailList, ExerciseMuscleRecyclerHolder.ClickListener mClickListener) {
         this.context = context;
         this.exerciseMuscleDetailList = exerciseMuscleDetailList;
@@ -45,7 +48,6 @@ public class ExerciseMuscleRecyclerAdapter extends RecyclerView.Adapter<Exercise
     public ExerciseMuscleRecyclerHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.custom_card_muscle_exercise, parent, false);
-
         return new ExerciseMuscleRecyclerHolder(view, mClickListener);
     }
 
@@ -107,12 +109,11 @@ public class ExerciseMuscleRecyclerAdapter extends RecyclerView.Adapter<Exercise
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 exerciseMuscleDetailListFiltered = (ArrayList<ExerciseMuscleDetail>) filterResults.values;
                 notifyDataSetChanged();
-//                if (exerciseMuscleDetailListFiltered.size() == 0) {
-////                    Toast.makeText(context, "Ko có giá tri tim kiem", Toast.LENGTH_SHORT).show();
-//                } else {
-//
-//
-//                }
+                if (exerciseMuscleDetailListFiltered.size() == 0) {
+                    exerciseMuscleDetailListFiltered.clear();
+                }
+                mClickListener.notifyTextChanged(charSequence.toString());
+
             }
         };
     }
@@ -153,6 +154,9 @@ public class ExerciseMuscleRecyclerAdapter extends RecyclerView.Adapter<Exercise
             void onClickItem(int position);
 
             void onClickFavoriteItem(int position);
+
+            //notify when text search is finish
+            void notifyTextChanged(String textSearch);
         }
 
     }

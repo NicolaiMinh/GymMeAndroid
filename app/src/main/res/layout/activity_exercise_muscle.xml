@@ -40,7 +40,7 @@
         android:textSize="16sp"
         android:gravity="center"
         android:visibility="gone"
-        android:text="there is no item in list favorites in the xxx category"
+        android:text=""
         />
 
     <android.support.v7.widget.RecyclerView
@@ -50,4 +50,5 @@
         android:id="@+id/list_muscle_exercise">
 
     </android.support.v7.widget.RecyclerView>
+
 </RelativeLayout>
