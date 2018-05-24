@@ -2,6 +2,7 @@ package com.android.sgvn.gymme.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -34,7 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class ExerciseMuscleActivity extends AppCompatActivity implements ExerciseMuscleRecyclerAdapter.ExerciseMuscleRecyclerHolder.ClickListener {
+public class ExerciseMuscleActivity extends BaseActivity implements ExerciseMuscleRecyclerAdapter.ExerciseMuscleRecyclerHolder.ClickListener {
 
     private static final String TAG = ExerciseMuscleActivity.class.getSimpleName();
 
@@ -52,7 +53,6 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
     private List<ExerciseMuscleDetail> exerciseMuscleDetailList;
     private List<ExerciseMuscleDetail> exerciseMuscleDetailListTemp;
     private boolean isSetFavorite;
-    private boolean isFetchData = false;
     private boolean isChooseFavorite = false;
     private ExerciseMuscleDetail currentPosition;
     String idExercise, nameExercise;
@@ -93,6 +93,7 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
         listMuscleExercise.setLayoutManager(gridLayoutManager);
         listMuscleExercise.setAdapter(mAdapter);
         if (nameExercise != null) {
+            showProgressDialog();
             getDataFromFirebase();
         }
     }
@@ -111,6 +112,7 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
                     messageFavorite.setVisibility(View.VISIBLE);
                 }
                 mAdapter.notifyDataSetChanged();
+                dismissProgressDialog();
             }
 
             @Override
@@ -121,9 +123,16 @@ public class ExerciseMuscleActivity extends AppCompatActivity implements Exercis
     }
 
     //implements ExerciseMuscleRecyclerAdapter.ExerciseMuscleRecyclerHolder.ClickListener
+    //onclick card view
     @Override
     public void onClickItem(final int position) {
         Log.d(TAG, "position " + mAdapter.getExerciseMuscleDetail().get(position));
+        if (mAdapter != null) {
+            Intent intent = new Intent(this, ExerciseMuscleDetailActivity.class);
+            intent.putExtra(Common.EXERCISE_DETAIL_NAME, mAdapter.getExerciseMuscleDetail().get(position).getExerciseName());
+            intent.putExtra(Common.EXERCISE_DETAIL_FAVORITE, mAdapter.getExerciseMuscleDetail().get(position).isFavorite());
+            startActivity(intent);
+        }
     }
 
     //click item favorite

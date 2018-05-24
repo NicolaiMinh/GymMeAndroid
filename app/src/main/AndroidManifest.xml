@@ -45,6 +45,7 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.ExerciseMuscleDetailActivity"></activity>
     </application>
 
 </manifest>

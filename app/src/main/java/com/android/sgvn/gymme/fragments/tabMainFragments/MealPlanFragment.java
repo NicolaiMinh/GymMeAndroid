@@ -73,6 +73,7 @@ public class MealPlanFragment extends BaseFragment implements MealListAdapter.Me
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerViewMeal.setLayoutManager(linearLayoutManager);
         recyclerViewMeal.setAdapter(mAdapter);
+        showProgressDialog();
         getDataFromFirebase();
 
 
@@ -119,6 +120,7 @@ public class MealPlanFragment extends BaseFragment implements MealListAdapter.Me
                     mealList.add(meal);
                 }
                 mAdapter.notifyDataSetChanged();
+                dismissProgressDialog();
             }
 
             @Override
