@@ -4,7 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.android.sgvn.gymme.R;
 import com.android.sgvn.gymme.adapter.ExerciseMuscleRecyclerAdapter;
 import com.android.sgvn.gymme.common.Common;
+import com.android.sgvn.gymme.fragments.exerciseDetailFragment.ExerciseDetailInfoFragment;
 import com.android.sgvn.gymme.model.ExerciseMuscleDetail;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -131,8 +132,21 @@ public class ExerciseMuscleActivity extends BaseActivity implements ExerciseMusc
             Intent intent = new Intent(this, ExerciseMuscleDetailActivity.class);
             intent.putExtra(Common.EXERCISE_DETAIL_NAME, mAdapter.getExerciseMuscleDetail().get(position).getExerciseName());
             intent.putExtra(Common.EXERCISE_DETAIL_FAVORITE, mAdapter.getExerciseMuscleDetail().get(position).isFavorite());
+            intent.putExtra(Common.EXERCISE_DETAIL_IMAGE, mAdapter.getExerciseMuscleDetail().get(position).getImageURL());
             startActivity(intent);
         }
+
+        //send data to ExerciseDetailInfoFragment
+        Bundle bundle = new Bundle();
+        bundle.putString(Common.EXERCISE_DETAIL_EXECUTION, mAdapter.getExerciseMuscleDetail().get(position).getExecution());
+        bundle.putString(Common.EXERCISE_DETAIL_PREPARATION, mAdapter.getExerciseMuscleDetail().get(position).getPreparation());
+        bundle.putString(Common.EXERCISE_DETAIL_PRIMARY_MUSCLE, mAdapter.getExerciseMuscleDetail().get(position).getPrimaryMuscle());
+        bundle.putString(Common.EXERCISE_DETAIL_SECONDARY_MUSCLE, mAdapter.getExerciseMuscleDetail().get(position).getSecondaryMucsle());
+        // set ExerciseDetailInfoFragment Arguments
+        ExerciseDetailInfoFragment infoFragment = new ExerciseDetailInfoFragment();
+        infoFragment.setArguments(bundle);
+
+
     }
 
     //click item favorite
@@ -171,12 +185,20 @@ public class ExerciseMuscleActivity extends BaseActivity implements ExerciseMusc
 
     @Override
     public void notifyTextChanged(String textSearch) {
-        if (mAdapter.getExerciseMuscleDetail().size() == 0) {
+        if (mAdapter.getExerciseMuscleDetail().size() == 0 && !textSearch.isEmpty()) {
             messageFavorite.setText("No results for '" + textSearch + "' in " + nameExercise + " category. \n Note: the search covers bodyparts, equipment, muscle exercise.");
             messageFavorite.setVisibility(View.VISIBLE);
         } else {
             messageFavorite.setText("");
             messageFavorite.setVisibility(View.GONE);
+        }
+        if (isChooseFavorite && textSearch.isEmpty() && mAdapter.getExerciseMuscleDetail().size() == 0) {
+            messageFavorite.setText("You have not selected any favorites in the '" + nameExercise + "' category.");
+            messageFavorite.setVisibility(View.VISIBLE);
+        }
+        if (!isChooseFavorite && textSearch.isEmpty()) {
+            messageFavorite.setText("There is have not data in the '" + nameExercise + "' category.");
+            messageFavorite.setVisibility(View.VISIBLE);
         }
     }
 
@@ -223,7 +245,7 @@ public class ExerciseMuscleActivity extends BaseActivity implements ExerciseMusc
             }
         }
         if (exerciseMuscleDetailListTemp.size() == 0 && isChooseFavorite) {
-            messageFavorite.setText("There is have not data in the '" + nameExercise + "' category.");
+            messageFavorite.setText("You have not selected any favorites in the '" + nameExercise + "' category.");
             messageFavorite.setVisibility(View.VISIBLE);
         }
         mAdapter.notifyDataSetChanged();

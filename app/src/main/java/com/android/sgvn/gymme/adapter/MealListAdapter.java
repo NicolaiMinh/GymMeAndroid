@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import com.android.sgvn.gymme.R;
 import com.android.sgvn.gymme.model.Meal;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -44,9 +46,11 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.MealLi
     @Override
     public void onBindViewHolder(MealListAdapter.MealListAdapterViewHolder holder, int position) {
         Meal meal = mealList.get(position);
-
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
         Glide.with(context)
                 .load(meal.getImageURL())
+                .apply(requestOptions)
                 .into(holder.mImageView);
     }
 

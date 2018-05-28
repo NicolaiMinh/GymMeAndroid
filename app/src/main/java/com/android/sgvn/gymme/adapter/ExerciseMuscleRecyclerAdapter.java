@@ -18,6 +18,8 @@ import com.android.sgvn.gymme.activities.ExerciseMuscleActivity;
 import com.android.sgvn.gymme.common.Common;
 import com.android.sgvn.gymme.model.ExerciseMuscleDetail;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -56,9 +58,13 @@ public class ExerciseMuscleRecyclerAdapter extends RecyclerView.Adapter<Exercise
         final ExerciseMuscleDetail item = exerciseMuscleDetailListFiltered.get(position);
 
         //set Image
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
         Glide.with(context)
                 .load(item.getImageURL())
+                .apply(requestOptions)
                 .into(holder.mImageView);
+
         //set exercise name
         holder.titleExerciseName.setText(item.getExerciseName());
 

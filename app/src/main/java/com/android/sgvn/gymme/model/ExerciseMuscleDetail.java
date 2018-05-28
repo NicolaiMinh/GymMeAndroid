@@ -10,6 +10,10 @@ import java.io.Serializable;
  */
 
 public class ExerciseMuscleDetail {
+    @SerializedName("execution")
+    @Expose
+    private String execution;
+
     @SerializedName("exerciseDetail")
     @Expose
     private String exerciseDetail;
@@ -21,6 +25,19 @@ public class ExerciseMuscleDetail {
     @SerializedName("imageURL")
     @Expose
     private String imageURL;
+
+    @SerializedName("preparation")
+    @Expose
+    private String preparation;
+
+    @SerializedName("primaryMuscle")
+    @Expose
+    private String primaryMuscle;
+
+    @SerializedName("secondaryMucsle")
+    @Expose
+    private String secondaryMucsle;
+
 
     @SerializedName("videoURL")
     @Expose
@@ -38,10 +55,14 @@ public class ExerciseMuscleDetail {
     public ExerciseMuscleDetail() {
     }
 
-    public ExerciseMuscleDetail(String exerciseDetail, String exerciseName, String imageURL, String videoURL, boolean favorite, int id) {
+    public ExerciseMuscleDetail(String execution, String exerciseDetail, String exerciseName, String imageURL, String preparation, String primaryMuscle, String secondaryMucsle, String videoURL, boolean favorite, int id) {
+        this.execution = execution;
         this.exerciseDetail = exerciseDetail;
         this.exerciseName = exerciseName;
         this.imageURL = imageURL;
+        this.preparation = preparation;
+        this.primaryMuscle = primaryMuscle;
+        this.secondaryMucsle = secondaryMucsle;
         this.videoURL = videoURL;
         this.favorite = favorite;
         this.id = id;
@@ -93,5 +114,37 @@ public class ExerciseMuscleDetail {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getExecution() {
+        return execution;
+    }
+
+    public void setExecution(String execution) {
+        this.execution = execution;
+    }
+
+    public String getPreparation() {
+        return preparation;
+    }
+
+    public void setPreparation(String preparation) {
+        this.preparation = preparation;
+    }
+
+    public String getPrimaryMuscle() {
+        return primaryMuscle;
+    }
+
+    public void setPrimaryMuscle(String primaryMuscle) {
+        this.primaryMuscle = primaryMuscle;
+    }
+
+    public String getSecondaryMucsle() {
+        return secondaryMucsle;
+    }
+
+    public void setSecondaryMucsle(String secondaryMucsle) {
+        this.secondaryMucsle = secondaryMucsle;
     }
 }

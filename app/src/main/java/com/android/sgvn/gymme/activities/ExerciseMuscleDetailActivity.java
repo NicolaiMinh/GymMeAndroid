@@ -1,7 +1,9 @@
 package com.android.sgvn.gymme.activities;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -17,8 +19,9 @@ import android.widget.TextView;
 import com.android.sgvn.gymme.R;
 import com.android.sgvn.gymme.adapter.TabPagerExerciseDetailAdapter;
 import com.android.sgvn.gymme.common.Common;
-import com.android.sgvn.gymme.common.IClickFavoriteItem;
 import com.android.sgvn.gymme.customview.NonSwipeableViewPager;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,9 +47,6 @@ public class ExerciseMuscleDetailActivity extends AppCompatActivity implements T
     private TabPagerExerciseDetailAdapter mPagerAdapter;
     public int defaultIndexPager = 0;//ExerciseDetailImageFragment
     private Unbinder unbinder;
-
-    IClickFavoriteItem iClickFavoriteItem;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +74,7 @@ public class ExerciseMuscleDetailActivity extends AppCompatActivity implements T
             favoriteItem.setImageResource(R.drawable.ic_star_black_item);
         }
 
-        Log.d(TAG+" favorite + exerciseName", String.valueOf(isFavorite) + "; " + exerciseNameReceive.toString());
+        Log.d(TAG + " favorite + exerciseName", String.valueOf(isFavorite) + "; " + exerciseNameReceive.toString());
 
     }
 
@@ -83,6 +83,7 @@ public class ExerciseMuscleDetailActivity extends AppCompatActivity implements T
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.favoriteItem:
+
                 break;
         }
     }
@@ -168,5 +169,27 @@ public class ExerciseMuscleDetailActivity extends AppCompatActivity implements T
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+    }
+
+    @OnClick({R.id.shareExercise})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.shareExercise:
+                shareImageExercise();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void shareImageExercise() {
+        ArrayList<Uri> imageUris = new ArrayList<Uri>();
+        String imageURL = getIntent().getStringExtra(Common.EXERCISE_DETAIL_IMAGE);
+        imageUris.add(Uri.parse(imageURL));
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, imageUris);
+        shareIntent.setType("image/*");
+        startActivity(Intent.createChooser(shareIntent, "Share images to.."));
     }
 }
