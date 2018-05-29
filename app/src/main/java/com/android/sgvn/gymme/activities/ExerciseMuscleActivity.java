@@ -54,9 +54,11 @@ public class ExerciseMuscleActivity extends BaseActivity implements ExerciseMusc
     private List<ExerciseMuscleDetail> exerciseMuscleDetailList;
     private List<ExerciseMuscleDetail> exerciseMuscleDetailListTemp;
     private boolean isSetFavorite;
+    private boolean isFetchData = false;
     private boolean isChooseFavorite = false;
     private ExerciseMuscleDetail currentPosition;
     String idExercise, nameExercise;
+
 
     //firebase
     FirebaseDatabase database;
@@ -111,6 +113,7 @@ public class ExerciseMuscleActivity extends BaseActivity implements ExerciseMusc
                 if (exerciseMuscleDetailListTemp.size() == 0) {
                     messageFavorite.setText("There is have not data in the '" + nameExercise + "' category.");
                     messageFavorite.setVisibility(View.VISIBLE);
+                    isFetchData = true;
                 }
                 mAdapter.notifyDataSetChanged();
                 dismissProgressDialog();
@@ -133,18 +136,22 @@ public class ExerciseMuscleActivity extends BaseActivity implements ExerciseMusc
             intent.putExtra(Common.EXERCISE_DETAIL_NAME, mAdapter.getExerciseMuscleDetail().get(position).getExerciseName());
             intent.putExtra(Common.EXERCISE_DETAIL_FAVORITE, mAdapter.getExerciseMuscleDetail().get(position).isFavorite());
             intent.putExtra(Common.EXERCISE_DETAIL_IMAGE, mAdapter.getExerciseMuscleDetail().get(position).getImageURL());
+            intent.putExtra(Common.EXERCISE_DETAIL_EXECUTION, mAdapter.getExerciseMuscleDetail().get(position).getExecution());
+            intent.putExtra(Common.EXERCISE_DETAIL_PREPARATION, mAdapter.getExerciseMuscleDetail().get(position).getPreparation());
+            intent.putExtra(Common.EXERCISE_DETAIL_PRIMARY_MUSCLE, mAdapter.getExerciseMuscleDetail().get(position).getPrimaryMuscle());
+            intent.putExtra(Common.EXERCISE_DETAIL_SECONDARY_MUSCLE, mAdapter.getExerciseMuscleDetail().get(position).getSecondaryMucsle());
             startActivity(intent);
         }
 
         //send data to ExerciseDetailInfoFragment
-        Bundle bundle = new Bundle();
-        bundle.putString(Common.EXERCISE_DETAIL_EXECUTION, mAdapter.getExerciseMuscleDetail().get(position).getExecution());
-        bundle.putString(Common.EXERCISE_DETAIL_PREPARATION, mAdapter.getExerciseMuscleDetail().get(position).getPreparation());
-        bundle.putString(Common.EXERCISE_DETAIL_PRIMARY_MUSCLE, mAdapter.getExerciseMuscleDetail().get(position).getPrimaryMuscle());
-        bundle.putString(Common.EXERCISE_DETAIL_SECONDARY_MUSCLE, mAdapter.getExerciseMuscleDetail().get(position).getSecondaryMucsle());
-        // set ExerciseDetailInfoFragment Arguments
-        ExerciseDetailInfoFragment infoFragment = new ExerciseDetailInfoFragment();
-        infoFragment.setArguments(bundle);
+//        Bundle bundle = new Bundle();
+//        bundle.putString(Common.EXERCISE_DETAIL_EXECUTION, mAdapter.getExerciseMuscleDetail().get(position).getExecution());
+//        bundle.putString(Common.EXERCISE_DETAIL_PREPARATION, mAdapter.getExerciseMuscleDetail().get(position).getPreparation());
+//        bundle.putString(Common.EXERCISE_DETAIL_PRIMARY_MUSCLE, mAdapter.getExerciseMuscleDetail().get(position).getPrimaryMuscle());
+//        bundle.putString(Common.EXERCISE_DETAIL_SECONDARY_MUSCLE, mAdapter.getExerciseMuscleDetail().get(position).getSecondaryMucsle());
+//        // set ExerciseDetailInfoFragment Arguments
+//        ExerciseDetailInfoFragment infoFragment = new ExerciseDetailInfoFragment();
+//        infoFragment.setArguments(bundle);
 
 
     }
@@ -190,13 +197,13 @@ public class ExerciseMuscleActivity extends BaseActivity implements ExerciseMusc
             messageFavorite.setVisibility(View.VISIBLE);
         } else {
             messageFavorite.setText("");
-            messageFavorite.setVisibility(View.GONE);
+            messageFavorite.setVisibility(View.INVISIBLE);
         }
         if (isChooseFavorite && textSearch.isEmpty() && mAdapter.getExerciseMuscleDetail().size() == 0) {
             messageFavorite.setText("You have not selected any favorites in the '" + nameExercise + "' category.");
             messageFavorite.setVisibility(View.VISIBLE);
         }
-        if (!isChooseFavorite && textSearch.isEmpty()) {
+        if (!isChooseFavorite && textSearch.isEmpty() && isFetchData) {
             messageFavorite.setText("There is have not data in the '" + nameExercise + "' category.");
             messageFavorite.setVisibility(View.VISIBLE);
         }
@@ -227,7 +234,13 @@ public class ExerciseMuscleActivity extends BaseActivity implements ExerciseMusc
             favoriteEachExercise.setImageResource(R.drawable.ic_star_yellow_24dp);
         } else {
             isChooseFavorite = false;
+            messageFavorite.setVisibility(View.INVISIBLE);
             favoriteEachExercise.setImageResource(R.drawable.ic_star_border_yellow_24dp);
+            if (exerciseMuscleDetailListTemp.size() == 0 && isFetchData) {
+                messageFavorite.setText("There is have not data in the '" + nameExercise + "' category.");
+                messageFavorite.setVisibility(View.VISIBLE);
+                isFetchData = true;
+            }
         }
 
         //before fetch data
@@ -306,4 +319,6 @@ public class ExerciseMuscleActivity extends BaseActivity implements ExerciseMusc
         }
         super.onBackPressed();
     }
+
+
 }

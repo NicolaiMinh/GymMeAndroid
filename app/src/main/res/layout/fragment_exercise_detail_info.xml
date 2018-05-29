@@ -5,7 +5,11 @@
     android:background="@android:color/white"
     tools:context="com.android.sgvn.gymme.fragments.exerciseDetailFragment.ExerciseDetailInfoFragment">
 
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text"
+        android:text="aaaaaa"/>
 
 
 </RelativeLayout>

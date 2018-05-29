@@ -20,6 +20,7 @@ import com.android.sgvn.gymme.R;
 import com.android.sgvn.gymme.adapter.TabPagerExerciseDetailAdapter;
 import com.android.sgvn.gymme.common.Common;
 import com.android.sgvn.gymme.customview.NonSwipeableViewPager;
+import com.android.sgvn.gymme.fragments.exerciseDetailFragment.ExerciseDetailInfoFragment;
 
 import java.util.ArrayList;
 
@@ -55,11 +56,17 @@ public class ExerciseMuscleDetailActivity extends AppCompatActivity implements T
         //set up Butterknife
         unbinder = ButterKnife.bind(this);
 
+        String ss = getIntent().getStringExtra(Common.EXERCISE_DETAIL_EXECUTION);
+        Bundle bundle = new Bundle();
+        bundle.putString("params", ss);
+        // set MyFragment Arguments
+        ExerciseDetailInfoFragment myObj = new ExerciseDetailInfoFragment();
+        myObj.setArguments(bundle);
+
         //setup toolbar
         setupToolbar();
         //set up TabLayout
         setupTabLayout();
-
         //initview
         initView();
     }
@@ -75,9 +82,7 @@ public class ExerciseMuscleDetailActivity extends AppCompatActivity implements T
         }
 
         Log.d(TAG + " favorite + exerciseName", String.valueOf(isFavorite) + "; " + exerciseNameReceive.toString());
-
     }
-
 
     @OnClick({R.id.favoriteItem})
     public void onClick(View view) {
@@ -87,7 +92,6 @@ public class ExerciseMuscleDetailActivity extends AppCompatActivity implements T
                 break;
         }
     }
-
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
