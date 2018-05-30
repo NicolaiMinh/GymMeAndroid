@@ -15,11 +15,13 @@ import com.android.sgvn.gymme.fragments.exerciseDetailFragment.ExerciseDetailVid
 public class TabPagerExerciseDetailAdapter extends FragmentPagerAdapter {
 
     int tabCount;//so luong tab
+    String data;
 
 
-    public TabPagerExerciseDetailAdapter(FragmentManager fm, int tabCount) {
+    public TabPagerExerciseDetailAdapter(FragmentManager fm, int tabCount, String data) {
         super(fm);
         this.tabCount = tabCount;
+        this.data = data;
     }
 
     /**
@@ -34,12 +36,14 @@ public class TabPagerExerciseDetailAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 ExerciseDetailImageFragment exerciseDetailImageFragment = new ExerciseDetailImageFragment();
+                exerciseDetailImageFragment. addData(data);
                 return exerciseDetailImageFragment;
             case 1:
                 ExerciseDetailVideoFragment exerciseDetailVideoFragment = new ExerciseDetailVideoFragment();
                 return exerciseDetailVideoFragment;
             case 2:
                 ExerciseDetailInfoFragment exerciseDetailInfoFragment = new ExerciseDetailInfoFragment();
+                exerciseDetailInfoFragment.addData(data);
                 return exerciseDetailInfoFragment;
             default:
                 return null;

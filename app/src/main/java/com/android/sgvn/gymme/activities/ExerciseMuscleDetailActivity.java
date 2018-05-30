@@ -44,6 +44,7 @@ public class ExerciseMuscleDetailActivity extends AppCompatActivity implements T
     TabLayout tabLayout;
     @BindView(R.id.viewpager)
     NonSwipeableViewPager viewpager;
+    String ss;
 
     private TabPagerExerciseDetailAdapter mPagerAdapter;
     public int defaultIndexPager = 0;//ExerciseDetailImageFragment
@@ -55,13 +56,12 @@ public class ExerciseMuscleDetailActivity extends AppCompatActivity implements T
         setContentView(R.layout.activity_exercise_muscle_detail);
         //set up Butterknife
         unbinder = ButterKnife.bind(this);
-
-        String ss = getIntent().getStringExtra(Common.EXERCISE_DETAIL_EXECUTION);
-        Bundle bundle = new Bundle();
-        bundle.putString("params", ss);
-        // set MyFragment Arguments
-        ExerciseDetailInfoFragment myObj = new ExerciseDetailInfoFragment();
-        myObj.setArguments(bundle);
+        ss = getIntent().getStringExtra(Common.EXERCISE_DETAIL_EXECUTION);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("params", ss);
+//        // set MyFragment Arguments
+//        ExerciseDetailInfoFragment myObj = new ExerciseDetailInfoFragment();
+//        myObj.setArguments(bundle);
 
         //setup toolbar
         setupToolbar();
@@ -127,7 +127,7 @@ public class ExerciseMuscleDetailActivity extends AppCompatActivity implements T
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         //Creating adapter to pager
-        mPagerAdapter = new TabPagerExerciseDetailAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        mPagerAdapter = new TabPagerExerciseDetailAdapter(getSupportFragmentManager(), tabLayout.getTabCount(),ss);
 
         //Adding adapter to view pager
         viewpager.setAdapter(mPagerAdapter);

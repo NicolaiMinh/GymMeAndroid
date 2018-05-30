@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.sgvn.gymme.R;
 import com.android.sgvn.gymme.fragments.BaseFragment;
@@ -27,9 +28,14 @@ public class ExerciseDetailImageFragment extends BaseFragment {
     @BindView(R.id.imageView)
     ImageView imageView;
     Unbinder unbinder;
+    String fuck;
 
     public ExerciseDetailImageFragment() {
         // Required empty public constructor
+    }
+
+    public void addData(String fuck){
+        this.fuck =  fuck;
     }
 
 
@@ -42,7 +48,7 @@ public class ExerciseDetailImageFragment extends BaseFragment {
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
         Glide.with(this).load("https://media.giphy.com/media/fQGDutVwP7ktZUwojJ/giphy.gif").apply(requestOptions).into(imageView);
-
+        Toast.makeText(getActivity(), fuck, Toast.LENGTH_LONG).show();
         return view;
     }
 

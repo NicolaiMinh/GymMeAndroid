@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,20 +32,17 @@ public class ExerciseDetailInfoFragment extends BaseFragment {
     private static final String TAG = ExerciseDetailInfoFragment.class.getSimpleName();
     @BindView(R.id.text)
     TextView text;
+    String fuck ;
     Unbinder unbinder;
-
-    public ExerciseDetailInfoFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        if(bundle!=null)
-        {
-            String s = bundle.getString("params");
-        }
+
+    }
+
+    public void addData(String fuck){
+        this.fuck =  fuck;
     }
 
     @Override
@@ -55,7 +53,9 @@ public class ExerciseDetailInfoFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_exercise_detail_info, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        String data = savedInstanceState.getString("params");
+        Toast.makeText(getActivity(), fuck+"Minh",Toast.LENGTH_LONG).show();
+
+       // String data = savedInstanceState.getString("params");
 
         return view;
     }
