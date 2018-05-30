@@ -66,6 +66,23 @@ public class MealPlanFragment extends BaseFragment implements MealListAdapter.Me
         View view = inflater.inflate(R.layout.fragment_meal_plan, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+//        mealList = new ArrayList<>();
+//        mAdapter = new MealListAdapter(getContext(), mealList, this);
+//
+//        recyclerViewMeal.setHasFixedSize(true);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+//        recyclerViewMeal.setLayoutManager(linearLayoutManager);
+//        recyclerViewMeal.setAdapter(mAdapter);
+//        showProgressDialog();
+//        getDataFromFirebase();
+
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mealList = new ArrayList<>();
         mAdapter = new MealListAdapter(getContext(), mealList, this);
 
@@ -75,14 +92,6 @@ public class MealPlanFragment extends BaseFragment implements MealListAdapter.Me
         recyclerViewMeal.setAdapter(mAdapter);
         showProgressDialog();
         getDataFromFirebase();
-
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

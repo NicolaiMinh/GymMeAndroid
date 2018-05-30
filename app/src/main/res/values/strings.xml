@@ -27,5 +27,10 @@
     <string name="string_meal_plans">Meal Plans</string>
     <string name="search_hint">search_hint</string>
     <string name="action_search">action_search</string>
+    <string name="primary_muscle">Primary muscle</string>
+    <string name="secondary_muscle">Secondary muscle</string>
+    <string name="instructions">Instructions</string>
+    <string name="preparation">Preparation</string>
+    <string name="execution">Execution</string>
 
 </resources>

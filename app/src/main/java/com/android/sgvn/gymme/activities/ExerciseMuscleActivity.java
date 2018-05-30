@@ -143,17 +143,6 @@ public class ExerciseMuscleActivity extends BaseActivity implements ExerciseMusc
             startActivity(intent);
         }
 
-        //send data to ExerciseDetailInfoFragment
-//        Bundle bundle = new Bundle();
-//        bundle.putString(Common.EXERCISE_DETAIL_EXECUTION, mAdapter.getExerciseMuscleDetail().get(position).getExecution());
-//        bundle.putString(Common.EXERCISE_DETAIL_PREPARATION, mAdapter.getExerciseMuscleDetail().get(position).getPreparation());
-//        bundle.putString(Common.EXERCISE_DETAIL_PRIMARY_MUSCLE, mAdapter.getExerciseMuscleDetail().get(position).getPrimaryMuscle());
-//        bundle.putString(Common.EXERCISE_DETAIL_SECONDARY_MUSCLE, mAdapter.getExerciseMuscleDetail().get(position).getSecondaryMucsle());
-//        // set ExerciseDetailInfoFragment Arguments
-//        ExerciseDetailInfoFragment infoFragment = new ExerciseDetailInfoFragment();
-//        infoFragment.setArguments(bundle);
-
-
     }
 
     //click item favorite

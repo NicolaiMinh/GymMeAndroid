@@ -15,6 +15,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -28,13 +30,13 @@ public class ExerciseDetailImageFragment extends BaseFragment {
     @BindView(R.id.imageView)
     ImageView imageView;
     Unbinder unbinder;
-    String fuck;
+    List<String> fuck;
 
     public ExerciseDetailImageFragment() {
         // Required empty public constructor
     }
 
-    public void addData(String fuck){
+    public void addData(List<String> fuck){
         this.fuck =  fuck;
     }
 
@@ -48,7 +50,7 @@ public class ExerciseDetailImageFragment extends BaseFragment {
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
         Glide.with(this).load("https://media.giphy.com/media/fQGDutVwP7ktZUwojJ/giphy.gif").apply(requestOptions).into(imageView);
-        Toast.makeText(getActivity(), fuck, Toast.LENGTH_LONG).show();
+//        Toast.makeText(getActivity(), fuck.get(0), Toast.LENGTH_LONG).show();
         return view;
     }
 

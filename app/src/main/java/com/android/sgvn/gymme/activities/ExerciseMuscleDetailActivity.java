@@ -23,6 +23,7 @@ import com.android.sgvn.gymme.customview.NonSwipeableViewPager;
 import com.android.sgvn.gymme.fragments.exerciseDetailFragment.ExerciseDetailInfoFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +45,8 @@ public class ExerciseMuscleDetailActivity extends AppCompatActivity implements T
     TabLayout tabLayout;
     @BindView(R.id.viewpager)
     NonSwipeableViewPager viewpager;
-    String ss;
+
+    List<String> sendData;
 
     private TabPagerExerciseDetailAdapter mPagerAdapter;
     public int defaultIndexPager = 0;//ExerciseDetailImageFragment
@@ -56,12 +58,13 @@ public class ExerciseMuscleDetailActivity extends AppCompatActivity implements T
         setContentView(R.layout.activity_exercise_muscle_detail);
         //set up Butterknife
         unbinder = ButterKnife.bind(this);
-        ss = getIntent().getStringExtra(Common.EXERCISE_DETAIL_EXECUTION);
-//        Bundle bundle = new Bundle();
-//        bundle.putString("params", ss);
-//        // set MyFragment Arguments
-//        ExerciseDetailInfoFragment myObj = new ExerciseDetailInfoFragment();
-//        myObj.setArguments(bundle);
+
+        //get data from ExerciseMuscleActivity
+        sendData = new ArrayList<>();
+        sendData.add(getIntent().getStringExtra(Common.EXERCISE_DETAIL_PRIMARY_MUSCLE));
+        sendData.add(getIntent().getStringExtra(Common.EXERCISE_DETAIL_SECONDARY_MUSCLE));
+        sendData.add(getIntent().getStringExtra(Common.EXERCISE_DETAIL_PREPARATION));
+        sendData.add(getIntent().getStringExtra(Common.EXERCISE_DETAIL_EXECUTION));
 
         //setup toolbar
         setupToolbar();
@@ -126,8 +129,8 @@ public class ExerciseMuscleDetailActivity extends AppCompatActivity implements T
         //set up layout
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        //Creating adapter to pager
-        mPagerAdapter = new TabPagerExerciseDetailAdapter(getSupportFragmentManager(), tabLayout.getTabCount(),ss);
+        //Creating adapter to pager, send data to ExerciseDetailInfoFragment
+        mPagerAdapter = new TabPagerExerciseDetailAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), sendData);
 
         //Adding adapter to view pager
         viewpager.setAdapter(mPagerAdapter);

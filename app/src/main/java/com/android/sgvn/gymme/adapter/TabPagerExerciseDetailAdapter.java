@@ -8,6 +8,8 @@ import com.android.sgvn.gymme.fragments.exerciseDetailFragment.ExerciseDetailIma
 import com.android.sgvn.gymme.fragments.exerciseDetailFragment.ExerciseDetailInfoFragment;
 import com.android.sgvn.gymme.fragments.exerciseDetailFragment.ExerciseDetailVideoFragment;
 
+import java.util.List;
+
 /**
  * Created by sgvn144 on 2018/04/03.
  */
@@ -15,10 +17,10 @@ import com.android.sgvn.gymme.fragments.exerciseDetailFragment.ExerciseDetailVid
 public class TabPagerExerciseDetailAdapter extends FragmentPagerAdapter {
 
     int tabCount;//so luong tab
-    String data;
+    List<String> data;
 
 
-    public TabPagerExerciseDetailAdapter(FragmentManager fm, int tabCount, String data) {
+    public TabPagerExerciseDetailAdapter(FragmentManager fm, int tabCount, List<String> data) {
         super(fm);
         this.tabCount = tabCount;
         this.data = data;
@@ -36,13 +38,14 @@ public class TabPagerExerciseDetailAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 ExerciseDetailImageFragment exerciseDetailImageFragment = new ExerciseDetailImageFragment();
-                exerciseDetailImageFragment. addData(data);
+//                exerciseDetailImageFragment.addData(data);
                 return exerciseDetailImageFragment;
             case 1:
                 ExerciseDetailVideoFragment exerciseDetailVideoFragment = new ExerciseDetailVideoFragment();
                 return exerciseDetailVideoFragment;
             case 2:
                 ExerciseDetailInfoFragment exerciseDetailInfoFragment = new ExerciseDetailInfoFragment();
+                //add data to fragment
                 exerciseDetailInfoFragment.addData(data);
                 return exerciseDetailInfoFragment;
             default:

@@ -8,5 +8,8 @@
     <color name="buttonStatePressed">#fafafa</color>
     <color name="arrowBackButton">#ffca28</color>
     <color name="card_muscle_exercise_background">#f5f5f5</color>
+    <color name="muscle_information">#102027</color>
+    <color name="text_background">#FFFF00</color>
+    <color name="text_color_detail">#102027</color>
 
 </resources>
