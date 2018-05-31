@@ -1,5 +1,8 @@
 package com.android.sgvn.gymme.common;
 
+//import com.android.sgvn.gymme.database.datasource.ExerciseModelRepository;
+//import com.android.sgvn.gymme.database.local.ExerciseModelDatabase;
+
 /**
  * Created by sgvn144 on 2018/04/26.
  */
@@ -18,10 +21,16 @@ public class Common {
     public static final String EXERCISE_DETAIL_NAME = "EXERCISE_DETAIL";
     public static final String EXERCISE_DETAIL_FAVORITE = "EXERCISE_DETAIL_FAVORITE";
     public static final String EXERCISE_DETAIL_IMAGE = "EXERCISE_DETAIL_IMAGE";
+    public static final String EXERCISE_DETAIL_VIDEO_URL = "EXERCISE_DETAIL_VIDEO_URL";
     public static final String EXERCISE_DETAIL_EXECUTION = "EXERCISE_DETAIL_EXECUTION";
     public static final String EXERCISE_DETAIL_PREPARATION = "EXERCISE_DETAIL_PREPARATION";
     public static final String EXERCISE_DETAIL_PRIMARY_MUSCLE = "EXERCISE_DETAIL_PRIMARY_MUSCLE";
     public static final String EXERCISE_DETAIL_SECONDARY_MUSCLE = "EXERCISE_DETAIL_SECONDARY_MUSCLE";
 
     public static final String EXERCISE_SET_FAVORITE_PROPERTY = "favorite";
+
+
+//    public static ExerciseModelDatabase exerciseModelDatabase;
+//    public static ExerciseModelRepository exerciseModelRepository;
+
 }

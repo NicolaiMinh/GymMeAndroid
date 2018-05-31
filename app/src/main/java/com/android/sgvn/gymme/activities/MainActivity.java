@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,10 @@ import android.widget.TextView;
 
 import com.android.sgvn.gymme.R;
 import com.android.sgvn.gymme.adapter.TabPagerAdapter;
+import com.android.sgvn.gymme.common.Common;
+//import com.android.sgvn.gymme.database.datasource.ExerciseModelRepository;
+//import com.android.sgvn.gymme.database.local.ExerciseModelDataSource;
+//import com.android.sgvn.gymme.database.local.ExerciseModelDatabase;
 import com.android.sgvn.gymme.utils.AppConstants;
 import com.crashlytics.android.Crashlytics;
 
@@ -55,7 +60,16 @@ public class MainActivity extends BaseLoginActivity implements TabLayout.OnTabSe
         //set up TabLayout
         setupTabLayout();
 
+        //init room database
+//        initRoomDatabase();
+
     }
+
+//    private void initRoomDatabase() {
+//        Common.exerciseModelDatabase = ExerciseModelDatabase.getInstance(this);
+//        Common.exerciseModelRepository = ExerciseModelRepository.getInstance(ExerciseModelDataSource.getInstance(Common.exerciseModelDatabase.exerciseModelDAO()));
+//        Log.d(TAG, "initRoomDatabase success");
+//    }
 
     private void openSplash() {
         if(!isOpenSplash){//return false

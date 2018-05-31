@@ -66,6 +66,12 @@ public class ExerciseMuscleDetailActivity extends AppCompatActivity implements T
         sendData.add(getIntent().getStringExtra(Common.EXERCISE_DETAIL_PREPARATION));
         sendData.add(getIntent().getStringExtra(Common.EXERCISE_DETAIL_EXECUTION));
 
+        sendData.add(getIntent().getStringExtra(Common.EXERCISE_DETAIL_VIDEO_URL));
+
+        sendData.add(getIntent().getStringExtra(Common.EXERCISE_DETAIL_IMAGE));
+
+
+
         //setup toolbar
         setupToolbar();
         //set up TabLayout

@@ -15,10 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.sgvn.gymme.R;
 import com.android.sgvn.gymme.adapter.ExerciseMuscleRecyclerAdapter;
 import com.android.sgvn.gymme.common.Common;
+//import com.android.sgvn.gymme.database.modelDB.ExerciseModel;
 import com.android.sgvn.gymme.fragments.exerciseDetailFragment.ExerciseDetailInfoFragment;
 import com.android.sgvn.gymme.model.ExerciseMuscleDetail;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,6 +111,26 @@ public class ExerciseMuscleActivity extends BaseActivity implements ExerciseMusc
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ExerciseMuscleDetail muscleDetail = snapshot.getValue(ExerciseMuscleDetail.class);
                     exerciseMuscleDetailList.add(muscleDetail);
+//                    //saveDataToDatabase();
+//                    try {
+//                        ExerciseModel exerciseModel = new ExerciseModel();
+//                        exerciseModel.execution = muscleDetail.getExecution().toString();
+//                        exerciseModel.exerciseDetail = muscleDetail.getExerciseDetail().toString();
+//                        exerciseModel.exerciseName = muscleDetail.getExerciseName().toString();
+//                        exerciseModel.imageURL = muscleDetail.getImageURL().toString();
+//                        exerciseModel.primaryMuscle = muscleDetail.getPrimaryMuscle().toString();
+//                        exerciseModel.preparation = muscleDetail.getPreparation().toString();
+//                        exerciseModel.secondaryMucsle = muscleDetail.getSecondaryMucsle().toString();
+//                        exerciseModel.videoURL = muscleDetail.getVideoURL().toString();
+//                        exerciseModel.favorite = muscleDetail.isFavorite();
+//                        //add to database
+//                        Common.exerciseModelRepository.insertToExerciseModel(exerciseModel);
+//                        Log.d(TAG, new Gson().toJson(exerciseModel));
+//                        Toast.makeText(ExerciseMuscleActivity.this, "Insert to database success", Toast.LENGTH_SHORT).show();
+//
+//                    } catch (Exception e) {
+//                        Toast.makeText(ExerciseMuscleActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
                 }
                 exerciseMuscleDetailListTemp.addAll(exerciseMuscleDetailList);
                 if (exerciseMuscleDetailListTemp.size() == 0) {
@@ -126,6 +149,7 @@ public class ExerciseMuscleActivity extends BaseActivity implements ExerciseMusc
         });
     }
 
+
     //implements ExerciseMuscleRecyclerAdapter.ExerciseMuscleRecyclerHolder.ClickListener
     //onclick card view
     @Override
@@ -136,6 +160,7 @@ public class ExerciseMuscleActivity extends BaseActivity implements ExerciseMusc
             intent.putExtra(Common.EXERCISE_DETAIL_NAME, mAdapter.getExerciseMuscleDetail().get(position).getExerciseName());
             intent.putExtra(Common.EXERCISE_DETAIL_FAVORITE, mAdapter.getExerciseMuscleDetail().get(position).isFavorite());
             intent.putExtra(Common.EXERCISE_DETAIL_IMAGE, mAdapter.getExerciseMuscleDetail().get(position).getImageURL());
+            intent.putExtra(Common.EXERCISE_DETAIL_VIDEO_URL, mAdapter.getExerciseMuscleDetail().get(position).getVideoURL());
             intent.putExtra(Common.EXERCISE_DETAIL_EXECUTION, mAdapter.getExerciseMuscleDetail().get(position).getExecution());
             intent.putExtra(Common.EXERCISE_DETAIL_PREPARATION, mAdapter.getExerciseMuscleDetail().get(position).getPreparation());
             intent.putExtra(Common.EXERCISE_DETAIL_PRIMARY_MUSCLE, mAdapter.getExerciseMuscleDetail().get(position).getPrimaryMuscle());

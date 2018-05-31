@@ -38,10 +38,13 @@ public class TabPagerExerciseDetailAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 ExerciseDetailImageFragment exerciseDetailImageFragment = new ExerciseDetailImageFragment();
-//                exerciseDetailImageFragment.addData(data);
+                //add data to fragment
+                exerciseDetailImageFragment.addData(data);
                 return exerciseDetailImageFragment;
             case 1:
                 ExerciseDetailVideoFragment exerciseDetailVideoFragment = new ExerciseDetailVideoFragment();
+                //add data to fragment
+                exerciseDetailVideoFragment.addData(data);
                 return exerciseDetailVideoFragment;
             case 2:
                 ExerciseDetailInfoFragment exerciseDetailInfoFragment = new ExerciseDetailInfoFragment();
