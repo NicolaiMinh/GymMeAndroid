@@ -12,4 +12,6 @@
     <color name="text_background">#FFFF00</color>
     <color name="text_color_detail">#102027</color>
 
+    <color name="background_text_exercise">#333333</color>
+
 </resources>

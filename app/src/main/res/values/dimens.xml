@@ -5,4 +5,6 @@
     <dimen name="button_drawable_padding">20dp</dimen>
     <dimen name="button_padding_left">20dp</dimen>
     <dimen name="profile_text">16sp</dimen>
+    <dimen name="card_exercise_margin">7dp</dimen>
+    <dimen name="card_exercise_corner">5dp</dimen>
 </resources>

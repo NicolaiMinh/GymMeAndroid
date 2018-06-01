@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature android:name="android.hardware.screen.portrait" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icon_logo"
@@ -20,26 +21,38 @@
         android:roundIcon="@mipmap/icon_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity"
-            android:screenOrientation="portrait"
-            >
+        <activity
+            android:name=".activities.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.SplashActivity" android:screenOrientation="portrait" />
-        <activity android:name=".activities.TutorialActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".activities.SettingsActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".activities.AccountActivity" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.SplashActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.TutorialActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.AccountActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="63c241de61bfc006809b4389a914004d0f7a2d6b" />
 
-        <activity android:name=".activities.MealDetailActivity" android:screenOrientation="portrait" />
-        <activity android:name=".activities.ExerciseMuscleActivity" android:screenOrientation="portrait">
+        <activity
+            android:name=".activities.MealDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ExerciseMuscleActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -48,7 +61,11 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ExerciseMuscleDetailActivity" android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activities.ExerciseMuscleDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.exerciseschedule.BeginnerActivity" />
+        <activity android:name=".activities.exerciseschedule.AdvanceActivity"></activity>
     </application>
 
 </manifest>
