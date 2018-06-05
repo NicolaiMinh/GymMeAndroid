@@ -32,5 +32,7 @@
     <string name="instructions">Instructions</string>
     <string name="preparation">Preparation</string>
     <string name="execution">Execution</string>
+    <string name="workout_3_days">Workout with 3 days</string>
+    <string name="workout_4_days">Workout with 4 days</string>
 
 </resources>

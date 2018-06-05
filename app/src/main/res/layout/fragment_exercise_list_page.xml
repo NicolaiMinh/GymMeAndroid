@@ -23,27 +23,23 @@
                     android:id="@+id/text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="Workout"
-                    android:textSize="16sp"
                     android:textColor="@color/colorPrimary"
-                    android:gravity="center"/>
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
-                android:layout_marginTop="10dp"
+                android:id="@+id/recycler_view_exercise"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/layout_text"
-                android:id="@+id/recycler_view_exercise">
+                android:layout_marginTop="10dp">
 
             </android.support.v7.widget.RecyclerView>
 
-
         </RelativeLayout>
 
-
     </LinearLayout>
-
-
 </ScrollView>

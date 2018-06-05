@@ -1,22 +1,40 @@
 package com.android.sgvn.gymme.activities.exerciseschedule;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.sgvn.gymme.R;
+import com.android.sgvn.gymme.activities.BaseActivity;
 import com.android.sgvn.gymme.adapter.ExercisePagerAdapter;
-import com.android.sgvn.gymme.adapter.MyPagerAdapter;
+import com.android.sgvn.gymme.common.Common;
+import com.android.sgvn.gymme.model.ExerciseMuscleDetail;
+import com.android.sgvn.gymme.model.ExerciseSchedule;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class BeginnerActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
+public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
+
+    private static final String TAG = BeginnerActivity.class.getSimpleName();
 
     @BindView(R.id.imb_back_toolbar)
     ImageButton imbBackToolbar;
@@ -26,11 +44,21 @@ public class BeginnerActivity extends AppCompatActivity implements ViewPager.OnP
     ViewPager viewPager;
     @BindView(R.id.viewPagerCountDots)
     LinearLayout viewPagerCountDots;
+    @BindView(R.id.workout_text)
+    TextView workoutText;
 
-    int pageCreate = 3;
+    int pageCreate;
+    private int muscleID;
+    private String muscleExercise;
 
     private int dotsCount;//dau cham dot tuong ung moi slider
     private ImageView[] dots;// imgae dot dc hien thi khi focus
+
+    private List<ExerciseMuscleDetail> exerciseMuscleDetailList;
+
+    //firebase
+    FirebaseDatabase database;
+    DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +66,82 @@ public class BeginnerActivity extends AppCompatActivity implements ViewPager.OnP
         setContentView(R.layout.activity_beginner);
         ButterKnife.bind(this);
 
+        //init firebase
+        database = FirebaseDatabase.getInstance();
+        reference = database.getReference(Common.FIREBASE_SCHEDULE_TABLE);
+
+        //get page from WorkoutFragment
+        pageCreate = getIntent().getIntExtra(Common.WORKOUT_SET_PAGE_CREATED, -1);
+        setupWorkoutText();
+
+        //getDataScheduleFromFireBase
+        queryExerciseByMuscleID();
+
         //setup viewPager
-        setupViewPager();
+//        setupViewPager();
     }
+
+
+    private void queryExerciseByMuscleID() {
+        exerciseMuscleDetailList = new ArrayList<>();
+        String FIREBASE_SCHEDULE_DAYS = getIntent().getStringExtra(Common.FIREBASE_SCHEDULE_DAYS);
+
+        if (FIREBASE_SCHEDULE_DAYS != null && !FIREBASE_SCHEDULE_DAYS.isEmpty()) {
+            //get data from firebase
+            reference.child(Common.FIREBASE_SCHEDULE_BEGINNER).child(FIREBASE_SCHEDULE_DAYS).child(Common.FIREBASE_SCHEDULE_EXERCISE).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        ExerciseSchedule exerciseSchedule = snapshot.getValue(ExerciseSchedule.class);
+                        muscleID = exerciseSchedule.getMuscleID();
+                        muscleExercise = exerciseSchedule.getMuscleExercise();
+
+                        reference = database.getReference(Common.FIREBASE_MUSCLE_EXERCISE_TABLE);
+
+                        //query data from FIREBASE_MUSCLE_EXERCISE_TABLE by muscleID
+                        Query query = reference.child(muscleExercise).orderByChild("id").equalTo(muscleID);
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        ExerciseMuscleDetail muscleDetail = snapshot.getValue(ExerciseMuscleDetail.class);
+                                        exerciseMuscleDetailList.add(muscleDetail);
+                                    }
+                                }
+                                setupViewPager();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.d(TAG, "query error: " + databaseError.getMessage());
+                            }
+                        });
+                    }
+                    Log.d(TAG, "muscleID: " + muscleID);
+                    Log.d(TAG, "muscleExercise: " + muscleExercise);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG, "Database error: " + databaseError.getMessage());
+                }
+            });
+        }
+    }
+
+    private void setupWorkoutText() {
+        if (pageCreate == 3) {
+            workoutText.setText(R.string.workout_3_days);
+        } else if (pageCreate == 4) {
+            workoutText.setText(R.string.workout_4_days);
+        }
+    }
+
 
     private void setupViewPager() {
         //setup viewpager present layout though MyPagerAdapter
-        viewPager.setAdapter(new ExercisePagerAdapter(getSupportFragmentManager(),pageCreate));
+        viewPager.setAdapter(new ExercisePagerAdapter(getSupportFragmentManager(), pageCreate, exerciseMuscleDetailList));
         viewPager.addOnPageChangeListener(this);
 
         //setup layout dot
@@ -52,7 +149,7 @@ public class BeginnerActivity extends AppCompatActivity implements ViewPager.OnP
     }
 
     private void setupUIPageViewController() {
-        //khoi tao 3 dots
+        //khoi tao dotsCount
         dotsCount = pageCreate;
         dots = new ImageView[dotsCount];
 
@@ -92,4 +189,14 @@ public class BeginnerActivity extends AppCompatActivity implements ViewPager.OnP
     public void onPageScrollStateChanged(int state) {
 
     }
+
+    @OnClick({R.id.imb_back_toolbar})
+    public void onViewClick(View view) {
+        switch (view.getId()) {
+            case R.id.imb_back_toolbar:
+                finish();
+                break;
+        }
+    }
+
 }

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.android.sgvn.gymme.R;
 import com.android.sgvn.gymme.activities.exerciseschedule.AdvanceActivity;
 import com.android.sgvn.gymme.activities.exerciseschedule.BeginnerActivity;
+import com.android.sgvn.gymme.common.Common;
 import com.android.sgvn.gymme.fragments.BaseFragment;
 
 import butterknife.BindView;
@@ -31,8 +32,8 @@ public class WorkoutFragment extends BaseFragment {
     CardView beginner3day;
     @BindView(R.id.beginner4day)
     CardView beginner4day;
-//    @BindView(R.id.advance)
-//    CardView advance;
+
+    private int pageCreate;
     Unbinder unbinder;
 
     public WorkoutFragment() {
@@ -65,14 +66,23 @@ public class WorkoutFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.beginner3day,R.id.beginner4day})
+    @OnClick({R.id.beginner3day, R.id.beginner4day})
     public void onCardClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.beginner3day:
-                startActivity(new Intent(getActivity(), BeginnerActivity.class));
+                intent = new Intent(getActivity(), BeginnerActivity.class);
+                pageCreate = 3;//create 3 pages- 3 days
+                intent.putExtra(Common.WORKOUT_SET_PAGE_CREATED, pageCreate);
+                intent.putExtra(Common.FIREBASE_SCHEDULE_DAYS, "3Days");
+                startActivity(intent);
                 break;
             case R.id.beginner4day:
-                startActivity(new Intent(getActivity(), BeginnerActivity.class));
+                intent = new Intent(getActivity(), BeginnerActivity.class);
+                pageCreate = 4;//create 4 pages- 4 days
+                intent.putExtra(Common.WORKOUT_SET_PAGE_CREATED, pageCreate);
+                intent.putExtra(Common.FIREBASE_SCHEDULE_DAYS, "4Days");
+                startActivity(intent);
                 break;
 
         }

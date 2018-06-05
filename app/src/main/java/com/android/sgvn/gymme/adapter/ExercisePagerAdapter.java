@@ -8,6 +8,7 @@ import com.android.sgvn.gymme.fragments.exerciseScheduleFragment.ExerciseListPag
 import com.android.sgvn.gymme.fragments.tutorialFragments.FirstPageFragment;
 import com.android.sgvn.gymme.fragments.tutorialFragments.SecondPageFragment;
 import com.android.sgvn.gymme.fragments.tutorialFragments.ThirdPageFragment;
+import com.android.sgvn.gymme.model.ExerciseMuscleDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,15 +19,17 @@ import java.util.List;
 
 public class ExercisePagerAdapter extends FragmentPagerAdapter {
     private int pageCreated;
+    private List<ExerciseMuscleDetail> exerciseMuscleDetailList;
 
     /**
      * Constructor
      *
      * @param fm
      */
-    public ExercisePagerAdapter(FragmentManager fm, int pageCreated) {
+    public ExercisePagerAdapter(FragmentManager fm, int pageCreated, List<ExerciseMuscleDetail> exerciseMuscleDetailList) {
         super(fm);
         this.pageCreated = pageCreated;
+        this.exerciseMuscleDetailList = exerciseMuscleDetailList;
     }
 
 
@@ -39,8 +42,10 @@ public class ExercisePagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         List<ExerciseListPageFragment> listPageFragment = new ArrayList<>();
+        ExerciseListPageFragment exerciseListPageFragment = new ExerciseListPageFragment();
         for (int i = 0; i < pageCreated; i++) {
             listPageFragment.add(ExerciseListPageFragment.newInstance(i, "ExerciseListPageFragment, Instance " + i));
+            exerciseListPageFragment.addData(exerciseMuscleDetailList);
         }
         return listPageFragment.get(position);
 

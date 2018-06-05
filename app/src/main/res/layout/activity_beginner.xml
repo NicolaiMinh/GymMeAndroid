@@ -22,13 +22,16 @@
         android:layout_below="@id/layout_toolbar"
         android:id="@+id/text"
         android:background="@color/background_text_exercise">
+
         <TextView
+            android:id="@+id/workout_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/layout_toolbar"
             android:gravity="center"
-            android:textColor="@android:color/white"
             android:text="Workout with 3 days"
-            />
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
     <LinearLayout
