@@ -2,7 +2,9 @@ package com.android.sgvn.gymme.fragments.exerciseScheduleFragment;
 
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.sgvn.gymme.R;
+import com.android.sgvn.gymme.activities.ExerciseMuscleDetailActivity;
 import com.android.sgvn.gymme.adapter.WorkoutRecyclerAdapter;
+import com.android.sgvn.gymme.common.Common;
 import com.android.sgvn.gymme.fragments.BaseFragment;
 import com.android.sgvn.gymme.model.ExerciseMuscleDetail;
 
@@ -35,30 +39,31 @@ public class ExerciseListPageFragment extends BaseFragment implements WorkoutRec
     Unbinder unbinder;
 
     private List<ExerciseMuscleDetail> exerciseMuscleDetailList;
-    private List<ExerciseMuscleDetail> exerciseMuscleDetailListWork;
     private WorkoutRecyclerAdapter mAdapter;
 
+    ArrayList<ExerciseMuscleDetail> myList;
+    int position;
+
     public void addData(List<ExerciseMuscleDetail> exerciseMuscleDetailList) {
-        exerciseMuscleDetailListWork = new ArrayList<>();
         this.exerciseMuscleDetailList = exerciseMuscleDetailList;
-        exerciseMuscleDetailListWork.addAll(exerciseMuscleDetailList);
     }
 
     /**
-     * Returns new instance.
-     *
-     * @param text
+     * @param position
+     * @param exerciseMuscleDetailList
      * @return
      */
-    public static ExerciseListPageFragment newInstance(int page, String text) {
+    public static ExerciseListPageFragment newInstance(int position, List<ExerciseMuscleDetail> exerciseMuscleDetailList) {
 
         // new instance
         ExerciseListPageFragment instance = new ExerciseListPageFragment();
-
+        ArrayList<ExerciseMuscleDetail> arraylist = new ArrayList<ExerciseMuscleDetail>();
+        arraylist.addAll(exerciseMuscleDetailList);
         // sets data to bundle
         Bundle bundle = new Bundle();
-        bundle.putString("msg", text);
-        bundle.putInt("page", page);
+
+        bundle.putInt("position", position);
+        bundle.putParcelableArrayList("exerciseMuscleDetailList", arraylist);
 
         // set data to fragment
         instance.setArguments(bundle);
@@ -70,9 +75,9 @@ public class ExerciseListPageFragment extends BaseFragment implements WorkoutRec
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String msg = getArguments().getString("msg");
-        int page = getArguments().getInt("page");
-
+        position = getArguments() != null ? getArguments().getInt("position") : 0;
+        myList = getArguments().getParcelableArrayList("exerciseMuscleDetailList");
+        Log.d(TAG, myList.toString());
     }
 
     /**
@@ -95,7 +100,9 @@ public class ExerciseListPageFragment extends BaseFragment implements WorkoutRec
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mAdapter = new WorkoutRecyclerAdapter(getContext(), exerciseMuscleDetailListWork, this);
+        exerciseMuscleDetailList = new ArrayList<>();
+        exerciseMuscleDetailList.addAll(myList);
+        mAdapter = new WorkoutRecyclerAdapter(getContext(), exerciseMuscleDetailList, this);
         recyclerViewExercise.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerViewExercise.setLayoutManager(linearLayoutManager);
@@ -123,5 +130,17 @@ public class ExerciseListPageFragment extends BaseFragment implements WorkoutRec
     @Override
     public void onClickItem(int position) {
         Log.d(TAG, "position " + mAdapter.getExerciseMuscleDetail().get(position));
+        if (mAdapter != null) {
+            Intent intent = new Intent(getActivity(), ExerciseMuscleDetailActivity.class);
+            intent.putExtra(Common.EXERCISE_DETAIL_NAME, mAdapter.getExerciseMuscleDetail().get(position).getExerciseName());
+            intent.putExtra(Common.EXERCISE_DETAIL_FAVORITE, mAdapter.getExerciseMuscleDetail().get(position).isFavorite());
+            intent.putExtra(Common.EXERCISE_DETAIL_IMAGE, mAdapter.getExerciseMuscleDetail().get(position).getImageURL());
+            intent.putExtra(Common.EXERCISE_DETAIL_VIDEO_URL, mAdapter.getExerciseMuscleDetail().get(position).getVideoURL());
+            intent.putExtra(Common.EXERCISE_DETAIL_EXECUTION, mAdapter.getExerciseMuscleDetail().get(position).getExecution());
+            intent.putExtra(Common.EXERCISE_DETAIL_PREPARATION, mAdapter.getExerciseMuscleDetail().get(position).getPreparation());
+            intent.putExtra(Common.EXERCISE_DETAIL_PRIMARY_MUSCLE, mAdapter.getExerciseMuscleDetail().get(position).getPrimaryMuscle());
+            intent.putExtra(Common.EXERCISE_DETAIL_SECONDARY_MUSCLE, mAdapter.getExerciseMuscleDetail().get(position).getSecondaryMucsle());
+            startActivity(intent);
+        }
     }
 }

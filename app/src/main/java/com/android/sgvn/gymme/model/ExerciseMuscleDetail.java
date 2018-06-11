@@ -1,5 +1,8 @@
 package com.android.sgvn.gymme.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +12,7 @@ import java.io.Serializable;
  * Created by sgvn144 on 2018/05/11.
  */
 
-public class ExerciseMuscleDetail {
+public class ExerciseMuscleDetail implements Parcelable {
     @SerializedName("execution")
     @Expose
     private String execution;
@@ -50,6 +53,7 @@ public class ExerciseMuscleDetail {
     @SerializedName("id")
     @Expose
     private int id;
+
 
 
     public ExerciseMuscleDetail() {
@@ -146,5 +150,48 @@ public class ExerciseMuscleDetail {
 
     public void setSecondaryMucsle(String secondaryMucsle) {
         this.secondaryMucsle = secondaryMucsle;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeString(execution);
+        dest.writeString(exerciseDetail);
+        dest.writeString(exerciseName);
+        dest.writeString(imageURL);
+        dest.writeString(preparation);
+        dest.writeString(primaryMuscle);
+        dest.writeString(secondaryMucsle);
+        dest.writeString(videoURL);
+        dest.writeInt(favorite ? 1 : 0);
+        dest.writeInt(id);
+    }
+    public static final Parcelable.Creator<ExerciseMuscleDetail> CREATOR
+            = new Parcelable.Creator<ExerciseMuscleDetail>() {
+        public ExerciseMuscleDetail createFromParcel(Parcel in) {
+            return new ExerciseMuscleDetail(in);
+        }
+
+        public ExerciseMuscleDetail[] newArray(int size) {
+            return new ExerciseMuscleDetail[size];
+        }
+    };
+
+    private ExerciseMuscleDetail(Parcel in) {
+        execution = in.readString();
+        exerciseDetail = in.readString();
+        exerciseName = in.readString();
+        imageURL = in.readString();
+        preparation = in.readString();
+        primaryMuscle = in.readString();
+        secondaryMucsle = in.readString();
+        videoURL = in.readString();
+        favorite = (in.readInt() == 0) ? false : true;
+        id = in.readInt();
     }
 }

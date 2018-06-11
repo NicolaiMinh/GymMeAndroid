@@ -42,10 +42,8 @@ public class ExercisePagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         List<ExerciseListPageFragment> listPageFragment = new ArrayList<>();
-        ExerciseListPageFragment exerciseListPageFragment = new ExerciseListPageFragment();
         for (int i = 0; i < pageCreated; i++) {
-            listPageFragment.add(ExerciseListPageFragment.newInstance(i, "ExerciseListPageFragment, Instance " + i));
-            exerciseListPageFragment.addData(exerciseMuscleDetailList);
+            listPageFragment.add(ExerciseListPageFragment.newInstance(i, exerciseMuscleDetailList));
         }
         return listPageFragment.get(position);
 

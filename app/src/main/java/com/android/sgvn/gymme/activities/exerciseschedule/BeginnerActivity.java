@@ -1,6 +1,8 @@
 package com.android.sgvn.gymme.activities.exerciseschedule;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -50,6 +52,7 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
     int pageCreate;
     private int muscleID;
     private String muscleExercise;
+    private boolean fetchDataFinish = false;
 
     private int dotsCount;//dau cham dot tuong ung moi slider
     private ImageView[] dots;// imgae dot dc hien thi khi focus
@@ -78,9 +81,8 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
         queryExerciseByMuscleID();
 
         //setup viewPager
-//        setupViewPager();
+        setupViewPager();
     }
-
 
     private void queryExerciseByMuscleID() {
         exerciseMuscleDetailList = new ArrayList<>();
@@ -95,6 +97,7 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
                         ExerciseSchedule exerciseSchedule = snapshot.getValue(ExerciseSchedule.class);
                         muscleID = exerciseSchedule.getMuscleID();
                         muscleExercise = exerciseSchedule.getMuscleExercise();
+                        String dayPresent = exerciseSchedule.getDayPresent();
 
                         reference = database.getReference(Common.FIREBASE_MUSCLE_EXERCISE_TABLE);
 
@@ -108,8 +111,8 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
                                         ExerciseMuscleDetail muscleDetail = snapshot.getValue(ExerciseMuscleDetail.class);
                                         exerciseMuscleDetailList.add(muscleDetail);
                                     }
+//                                    setupViewPager();
                                 }
-                                setupViewPager();
                             }
 
                             @Override
@@ -117,6 +120,7 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
                                 Log.d(TAG, "query error: " + databaseError.getMessage());
                             }
                         });
+
                     }
                     Log.d(TAG, "muscleID: " + muscleID);
                     Log.d(TAG, "muscleExercise: " + muscleExercise);
@@ -140,6 +144,8 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
 
 
     private void setupViewPager() {
+//        queryExerciseByMuscleID();
+
         //setup viewpager present layout though MyPagerAdapter
         viewPager.setAdapter(new ExercisePagerAdapter(getSupportFragmentManager(), pageCreate, exerciseMuscleDetailList));
         viewPager.addOnPageChangeListener(this);
@@ -199,4 +205,4 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
         }
     }
 
-}
+   }

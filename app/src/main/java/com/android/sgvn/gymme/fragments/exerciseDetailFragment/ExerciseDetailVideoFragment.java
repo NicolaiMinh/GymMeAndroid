@@ -59,7 +59,7 @@ public class ExerciseDetailVideoFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (view != null) {
+        if (view != null && !videoURL.isEmpty()) {
             //Creating MediaController
             MediaController mediaController = new MediaController(getActivity());
             mediaController.setAnchorView(videoView);
@@ -73,7 +73,15 @@ public class ExerciseDetailVideoFragment extends BaseFragment {
             videoView.setMediaController(mediaController);
             videoView.setVideoURI(uri);
             videoView.requestFocus();
-            videoView.start();
+//            videoView.start();
+            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                    mp.setVolume(0, 0);//set mute
+                }
+            });
             //set video play looping
             videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
