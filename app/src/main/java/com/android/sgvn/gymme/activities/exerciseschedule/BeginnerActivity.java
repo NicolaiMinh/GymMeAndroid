@@ -24,10 +24,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -52,7 +55,7 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
     int pageCreate;
     private int muscleID;
     private String muscleExercise;
-    private List<String> dayPresent;
+//    private List<String> dayPresent;
 
     private int dotsCount;//dau cham dot tuong ung moi slider
     private ImageView[] dots;// imgae dot dc hien thi khi focus
@@ -84,60 +87,89 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
 
     private void queryExerciseByMuscleID() {
         exerciseMuscleDetailList = new ArrayList<>();
-        dayPresent = new ArrayList<>();
+        final HashMap<String, ExerciseMuscleDetail> bullets = new HashMap<>();
+//        dayPresent = new ArrayList<>();
         String FIREBASE_SCHEDULE_DAYS = getIntent().getStringExtra(Common.FIREBASE_SCHEDULE_DAYS);
 //.orderByChild("dayPresent").equalTo("day1")
 
+//        if (FIREBASE_SCHEDULE_DAYS != null && !FIREBASE_SCHEDULE_DAYS.isEmpty()) {
+//            //get data from firebase
+//            reference.child(Common.FIREBASE_SCHEDULE_BEGINNER).child(FIREBASE_SCHEDULE_DAYS).child(Common.FIREBASE_SCHEDULE_EXERCISE).child("Day1").addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                        final ExerciseSchedule exerciseSchedule = snapshot.getValue(ExerciseSchedule.class);
+//                        muscleID = exerciseSchedule.getMuscleID();
+//                        muscleExercise = exerciseSchedule.getMuscleExercise();
+//
+//                        final int count = (int) dataSnapshot.getChildrenCount();
+//
+//                        reference = database.getReference(Common.FIREBASE_MUSCLE_EXERCISE_TABLE);
+//
+//                        //query data from FIREBASE_MUSCLE_EXERCISE_TABLE by muscleID
+//                        Query query = reference.child(muscleExercise).orderByChild("id").equalTo(muscleID);
+//                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(DataSnapshot dataSnapshot) {
+//                                if (dataSnapshot.exists()) {
+//                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                                        ExerciseMuscleDetail muscleDetail = snapshot.getValue(ExerciseMuscleDetail.class);
+//                                        exerciseMuscleDetailList.add(muscleDetail);
+////                                        dayPresent.add(muscleDetail.getDayPresent());
+//                                    }
+//                                    //check fetch data finish
+//                                    if(exerciseMuscleDetailList.size() == count){
+//                                        //setup viewPager
+//                                        setupViewPager();
+//                                    }
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(DatabaseError databaseError) {
+//                                Log.d(TAG, "query error: " + databaseError.getMessage());
+//                            }
+//                        });
+//
+//                    }
+//                    Log.d(TAG, "muscleID: " + muscleID);
+//                    Log.d(TAG, "muscleExercise: " + muscleExercise);
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//                    Log.d(TAG, "Database error: " + databaseError.getMessage());
+//                }
+//            });
+//        }
+
         if (FIREBASE_SCHEDULE_DAYS != null && !FIREBASE_SCHEDULE_DAYS.isEmpty()) {
-            //get data from firebase
-            reference.child(Common.FIREBASE_SCHEDULE_BEGINNER).child(FIREBASE_SCHEDULE_DAYS).child(Common.FIREBASE_SCHEDULE_EXERCISE).addListenerForSingleValueEvent(new ValueEventListener() {
+            Query mQueryRef = reference.child(Common.FIREBASE_SCHEDULE_BEGINNER).child(FIREBASE_SCHEDULE_DAYS).child(Common.FIREBASE_SCHEDULE_EXERCISE);
+            mQueryRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        final ExerciseSchedule exerciseSchedule = snapshot.getValue(ExerciseSchedule.class);
-                        muscleID = exerciseSchedule.getMuscleID();
-                        muscleExercise = exerciseSchedule.getMuscleExercise();
 
-                        final int count = (int) dataSnapshot.getChildrenCount();
+                    Log.d(TAG, "onDataChange():" + dataSnapshot.toString());
 
-                        reference = database.getReference(Common.FIREBASE_MUSCLE_EXERCISE_TABLE);
-
-                        //query data from FIREBASE_MUSCLE_EXERCISE_TABLE by muscleID
-                        Query query = reference.child(muscleExercise).orderByChild("id").equalTo(muscleID);
-                        query.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.exists()) {
-                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                        ExerciseMuscleDetail muscleDetail = snapshot.getValue(ExerciseMuscleDetail.class);
-                                        exerciseMuscleDetailList.add(muscleDetail);
-                                        dayPresent.add(muscleDetail.getDayPresent());
-                                    }
-                                    //check fetch data finish
-                                    if(exerciseMuscleDetailList.size() == count){
-                                        //setup viewPager
-                                        setupViewPager();
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Log.d(TAG, "query error: " + databaseError.getMessage());
-                            }
-                        });
-
+                    for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                        String key = snapshot.getKey();//day value
+                        GenericTypeIndicator<List<ExerciseMuscleDetail>> t = new GenericTypeIndicator<List<ExerciseMuscleDetail>>() {};
+                        List<ExerciseMuscleDetail> yourStringArray = dataSnapshot.getValue(t);
+//                        ExerciseMuscleDetail exerciseMuscleDetail = snapshot.getValue(ExerciseMuscleDetail.class);
                     }
-                    Log.d(TAG, "muscleID: " + muscleID);
-                    Log.d(TAG, "muscleExercise: " + muscleExercise);
+
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d(TAG, "Database error: " + databaseError.getMessage());
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.e(TAG, "Failed to read Bullet list.", error.toException());
+
                 }
             });
         }
+
+
     }
 
     private void setupWorkoutText() {
@@ -151,7 +183,7 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
 
     private void setupViewPager() {
         //setup viewpager present layout though MyPagerAdapter
-        viewPager.setAdapter(new ExercisePagerAdapter(getSupportFragmentManager(), pageCreate, exerciseMuscleDetailList, dayPresent));
+        viewPager.setAdapter(new ExercisePagerAdapter(getSupportFragmentManager(), pageCreate, exerciseMuscleDetailList));
         viewPager.addOnPageChangeListener(this);
 
         //setup layout dot
