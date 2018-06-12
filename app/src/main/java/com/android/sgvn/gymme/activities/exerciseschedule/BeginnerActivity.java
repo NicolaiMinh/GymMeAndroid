@@ -52,7 +52,7 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
     int pageCreate;
     private int muscleID;
     private String muscleExercise;
-    private boolean fetchDataFinish = false;
+    private List<String> dayPresent;
 
     private int dotsCount;//dau cham dot tuong ung moi slider
     private ImageView[] dots;// imgae dot dc hien thi khi focus
@@ -80,13 +80,13 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
         //getDataScheduleFromFireBase
         queryExerciseByMuscleID();
 
-        //setup viewPager
-        setupViewPager();
     }
 
     private void queryExerciseByMuscleID() {
         exerciseMuscleDetailList = new ArrayList<>();
+        dayPresent = new ArrayList<>();
         String FIREBASE_SCHEDULE_DAYS = getIntent().getStringExtra(Common.FIREBASE_SCHEDULE_DAYS);
+//.orderByChild("dayPresent").equalTo("day1")
 
         if (FIREBASE_SCHEDULE_DAYS != null && !FIREBASE_SCHEDULE_DAYS.isEmpty()) {
             //get data from firebase
@@ -94,10 +94,11 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        ExerciseSchedule exerciseSchedule = snapshot.getValue(ExerciseSchedule.class);
+                        final ExerciseSchedule exerciseSchedule = snapshot.getValue(ExerciseSchedule.class);
                         muscleID = exerciseSchedule.getMuscleID();
                         muscleExercise = exerciseSchedule.getMuscleExercise();
-                        String dayPresent = exerciseSchedule.getDayPresent();
+
+                        final int count = (int) dataSnapshot.getChildrenCount();
 
                         reference = database.getReference(Common.FIREBASE_MUSCLE_EXERCISE_TABLE);
 
@@ -110,8 +111,13 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                         ExerciseMuscleDetail muscleDetail = snapshot.getValue(ExerciseMuscleDetail.class);
                                         exerciseMuscleDetailList.add(muscleDetail);
+                                        dayPresent.add(muscleDetail.getDayPresent());
                                     }
-//                                    setupViewPager();
+                                    //check fetch data finish
+                                    if(exerciseMuscleDetailList.size() == count){
+                                        //setup viewPager
+                                        setupViewPager();
+                                    }
                                 }
                             }
 
@@ -144,10 +150,8 @@ public class BeginnerActivity extends BaseActivity implements ViewPager.OnPageCh
 
 
     private void setupViewPager() {
-//        queryExerciseByMuscleID();
-
         //setup viewpager present layout though MyPagerAdapter
-        viewPager.setAdapter(new ExercisePagerAdapter(getSupportFragmentManager(), pageCreate, exerciseMuscleDetailList));
+        viewPager.setAdapter(new ExercisePagerAdapter(getSupportFragmentManager(), pageCreate, exerciseMuscleDetailList, dayPresent));
         viewPager.addOnPageChangeListener(this);
 
         //setup layout dot

@@ -43,26 +43,27 @@ public class ExerciseListPageFragment extends BaseFragment implements WorkoutRec
 
     ArrayList<ExerciseMuscleDetail> myList;
     int position;
-
-    public void addData(List<ExerciseMuscleDetail> exerciseMuscleDetailList) {
-        this.exerciseMuscleDetailList = exerciseMuscleDetailList;
-    }
+    ArrayList<String> dayPresent;
 
     /**
      * @param position
      * @param exerciseMuscleDetailList
      * @return
      */
-    public static ExerciseListPageFragment newInstance(int position, List<ExerciseMuscleDetail> exerciseMuscleDetailList) {
+    public static ExerciseListPageFragment newInstance(int position, List<ExerciseMuscleDetail> exerciseMuscleDetailList, List<String> dayPresent) {
 
         // new instance
         ExerciseListPageFragment instance = new ExerciseListPageFragment();
         ArrayList<ExerciseMuscleDetail> arraylist = new ArrayList<ExerciseMuscleDetail>();
         arraylist.addAll(exerciseMuscleDetailList);
+
+        ArrayList<String> arraylistString = new ArrayList<String>();
+        arraylistString.addAll(dayPresent);
         // sets data to bundle
         Bundle bundle = new Bundle();
 
         bundle.putInt("position", position);
+        bundle.putStringArrayList("dayPresent", arraylistString);
         bundle.putParcelableArrayList("exerciseMuscleDetailList", arraylist);
 
         // set data to fragment
@@ -76,6 +77,7 @@ public class ExerciseListPageFragment extends BaseFragment implements WorkoutRec
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         position = getArguments() != null ? getArguments().getInt("position") : 0;
+        dayPresent = getArguments().getStringArrayList("dayPresent");
         myList = getArguments().getParcelableArrayList("exerciseMuscleDetailList");
         Log.d(TAG, myList.toString());
     }

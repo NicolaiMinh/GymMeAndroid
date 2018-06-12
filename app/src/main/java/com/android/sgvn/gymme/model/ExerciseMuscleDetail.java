@@ -13,6 +13,10 @@ import java.io.Serializable;
  */
 
 public class ExerciseMuscleDetail implements Parcelable {
+    @SerializedName("dayPresent")
+    @Expose
+    private String dayPresent;
+
     @SerializedName("execution")
     @Expose
     private String execution;
@@ -59,7 +63,8 @@ public class ExerciseMuscleDetail implements Parcelable {
     public ExerciseMuscleDetail() {
     }
 
-    public ExerciseMuscleDetail(String execution, String exerciseDetail, String exerciseName, String imageURL, String preparation, String primaryMuscle, String secondaryMucsle, String videoURL, boolean favorite, int id) {
+    public ExerciseMuscleDetail(String dayPresent, String execution, String exerciseDetail, String exerciseName, String imageURL, String preparation, String primaryMuscle, String secondaryMucsle, String videoURL, boolean favorite, int id) {
+        this.dayPresent = dayPresent;
         this.execution = execution;
         this.exerciseDetail = exerciseDetail;
         this.exerciseName = exerciseName;
@@ -70,6 +75,14 @@ public class ExerciseMuscleDetail implements Parcelable {
         this.videoURL = videoURL;
         this.favorite = favorite;
         this.id = id;
+    }
+
+    public String getDayPresent() {
+        return dayPresent;
+    }
+
+    public void setDayPresent(String dayPresent) {
+        this.dayPresent = dayPresent;
     }
 
     public String getExerciseDetail() {

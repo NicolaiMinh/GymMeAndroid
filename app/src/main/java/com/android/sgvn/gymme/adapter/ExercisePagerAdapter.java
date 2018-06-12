@@ -12,6 +12,7 @@ import com.android.sgvn.gymme.model.ExerciseMuscleDetail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by sgvn144 on 2018/04/03.
@@ -19,6 +20,7 @@ import java.util.List;
 
 public class ExercisePagerAdapter extends FragmentPagerAdapter {
     private int pageCreated;
+    private List<String> dayPresent;
     private List<ExerciseMuscleDetail> exerciseMuscleDetailList;
 
     /**
@@ -26,10 +28,11 @@ public class ExercisePagerAdapter extends FragmentPagerAdapter {
      *
      * @param fm
      */
-    public ExercisePagerAdapter(FragmentManager fm, int pageCreated, List<ExerciseMuscleDetail> exerciseMuscleDetailList) {
+    public ExercisePagerAdapter(FragmentManager fm, int pageCreated, List<ExerciseMuscleDetail> exerciseMuscleDetailList, List<String> dayPresent) {
         super(fm);
         this.pageCreated = pageCreated;
         this.exerciseMuscleDetailList = exerciseMuscleDetailList;
+        this.dayPresent = dayPresent;
     }
 
 
@@ -42,21 +45,22 @@ public class ExercisePagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         List<ExerciseListPageFragment> listPageFragment = new ArrayList<>();
+        String dayPresentFetch = "";
+        if (position == 0) {
+            dayPresentFetch = "day1";
+        } else if (position == 1) {
+            dayPresentFetch = "day2";
+        } else if (position == 2) {
+            dayPresentFetch = "day3";
+        } else if (position == 3) {
+            dayPresentFetch = "day4";
+        }
+
+        List<ExerciseMuscleDetail> muscleDetailList = groupListByDayPresent(dayPresentFetch);
         for (int i = 0; i < pageCreated; i++) {
-            listPageFragment.add(ExerciseListPageFragment.newInstance(i, exerciseMuscleDetailList));
+            listPageFragment.add(ExerciseListPageFragment.newInstance(i, muscleDetailList, dayPresent));
         }
         return listPageFragment.get(position);
-
-//        switch (position) {
-//            case 0:
-//                return ExerciseListPageFragment.newInstance(0, "ExerciseListPageFragment, Instance 1");
-//            case 1:
-//                return ExerciseListPageFragment.newInstance(1, "ExerciseListPageFragment, Instance 2");
-//            case 2:
-//                return ExerciseListPageFragment.newInstance(2, "ExerciseListPageFragment, Instance 3");
-//            default:
-//                return null;
-//        }
     }
 
     /**
@@ -69,4 +73,19 @@ public class ExercisePagerAdapter extends FragmentPagerAdapter {
         return pageCreated;
     }
 
+    private List<ExerciseMuscleDetail> groupListByDayPresent(final String dayPresent) {
+        List<ExerciseMuscleDetail> muscleDetailList = new ArrayList<>();
+            for (ExerciseMuscleDetail person : muscleDetailList) {
+            if (person.getDayPresent().equals(dayPresent)) {
+                muscleDetailList.add(person);
+            }
+        }
+//        for (int i = 0; i < exerciseMuscleDetailList.size(); i++) {
+//            if (exerciseMuscleDetailList.get(i).getDayPresent().equals(dayPresent)) {
+//
+//            }
+//        }
+
+        return muscleDetailList;
+    }
 }
